@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Bali Sands Core
  * Description:       Product ranges, yard details, homepage Elementor widgets, the quote form and one-click site setup for Bali Sands.
- * Version:           1.0.0
+ * Version:           1.1.0
  * Requires at least: 6.3
  * Requires PHP:      7.4
  * Text Domain:       bali-sands
@@ -12,7 +12,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'BS_CORE_VERSION', '1.0.0' );
+define( 'BS_CORE_VERSION', '1.1.0' );
 define( 'BS_CORE_FILE', __FILE__ );
 define( 'BS_CORE_DIR', plugin_dir_path( __FILE__ ) );
 define( 'BS_CORE_URL', plugin_dir_url( __FILE__ ) );

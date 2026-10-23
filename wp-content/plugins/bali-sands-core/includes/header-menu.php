@@ -103,8 +103,9 @@ function bs_menu_thumb_style( $item ) {
  * header bar around it should be `position: relative`.
  *
  * @param string|int $menu Theme location or nav menu ID.
+ * @param string     $cta  "Get a quote" item: show, mobile (drawer only) or hide.
  */
-function bs_header_menu( $menu = 'primary' ) {
+function bs_header_menu( $menu = 'primary', $cta = 'show' ) {
 	$tree = bs_menu_tree( $menu );
 	if ( ! $tree ) {
 		if ( current_user_can( 'edit_theme_options' ) ) {
@@ -114,7 +115,7 @@ function bs_header_menu( $menu = 'primary' ) {
 	}
 	$uid = 'bs-nav-' . wp_unique_id();
 	?>
-	<div class="bs-menu" data-bs-menu>
+	<div class="bs-menu<?php echo 'show' === $cta ? '' : ' bs-menu--cta-' . esc_attr( $cta ); ?>" data-bs-menu>
 		<button type="button" class="bs-burger" aria-expanded="false" aria-controls="<?php echo esc_attr( $uid ); ?>">
 			<span class="bs-burger__lines" aria-hidden="true"></span>
 			<span class="screen-reader-text"><?php esc_html_e( 'Menu', 'bali-sands' ); ?></span>
