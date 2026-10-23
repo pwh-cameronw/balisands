@@ -39,6 +39,7 @@ function bs_elementor_widgets( $manager ) {
 		'cards'       => 'BS_Widget_Cards',
 		'reviews'     => 'BS_Widget_Reviews',
 		'quote'       => 'BS_Widget_Quote',
+		'header-menu' => 'BS_Widget_Header_Menu',
 	);
 	foreach ( $widgets as $file => $class ) {
 		require_once BS_CORE_DIR . 'includes/widgets/class-bs-widget-' . $file . '.php';

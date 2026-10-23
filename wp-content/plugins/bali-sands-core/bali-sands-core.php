@@ -21,8 +21,10 @@ require BS_CORE_DIR . 'includes/yard.php';
 require BS_CORE_DIR . 'includes/post-types.php';
 require BS_CORE_DIR . 'includes/fields.php';
 require BS_CORE_DIR . 'includes/gravity-forms.php';
+require BS_CORE_DIR . 'includes/header-menu.php';
 require BS_CORE_DIR . 'includes/elementor.php';
 require BS_CORE_DIR . 'includes/setup.php';
+require BS_CORE_DIR . 'includes/setup-header.php';
 
 register_activation_hook( __FILE__, 'bs_core_activate' );
 

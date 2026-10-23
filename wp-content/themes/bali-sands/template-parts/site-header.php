@@ -12,7 +12,7 @@ $bs_right = bali_sands_lines( bali_sands_yard( 'bs_topbar_right' ) );
 $bs_phone = bali_sands_yard( 'bs_phone' );
 $bs_logo  = (int) get_theme_mod( 'custom_logo' );
 ?>
-<header class="bs-header" id="bs-header">
+<header class="bs-header">
 	<?php if ( $bs_left || $bs_right || $bs_phone ) : ?>
 		<div class="bs-topbar">
 			<div class="bs-topbar__group">
@@ -42,13 +42,10 @@ $bs_logo  = (int) get_theme_mod( 'custom_logo' );
 			<span class="bs-brand__name"><?php bloginfo( 'name' ); ?></span>
 		</a>
 
-		<button type="button" class="bs-burger" aria-expanded="false" aria-controls="bs-nav">
-			<span class="bs-burger__lines" aria-hidden="true"></span>
-			<span class="screen-reader-text"><?php esc_html_e( 'Menu', 'bali-sands' ); ?></span>
-		</button>
-
-		<nav class="bs-nav" id="bs-nav" aria-label="<?php esc_attr_e( 'Main', 'bali-sands' ); ?>">
-			<?php bali_sands_nav(); ?>
-		</nav>
+		<?php
+		if ( function_exists( 'bs_header_menu' ) ) {
+			bs_header_menu( 'primary' );
+		}
+		?>
 	</div>
 </header>

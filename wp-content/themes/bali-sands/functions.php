@@ -41,7 +41,6 @@ add_action( 'wp_enqueue_scripts', 'bali_sands_assets', 20 );
 function bali_sands_assets() {
 	wp_enqueue_style( 'bali-sands-fonts', 'https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap', array(), null ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
 	wp_enqueue_style( 'bali-sands', get_stylesheet_directory_uri() . '/assets/css/site.css', array(), BALI_SANDS_THEME_VERSION );
-	wp_enqueue_script( 'bali-sands', get_stylesheet_directory_uri() . '/assets/js/site.js', array(), BALI_SANDS_THEME_VERSION, true );
 }
 
 add_filter( 'wp_resource_hints', 'bali_sands_resource_hints', 10, 2 );
@@ -61,15 +60,6 @@ function bali_sands_resource_hints( $urls, $relation_type ) {
 		);
 	}
 	return $urls;
-}
-
-add_action( 'wp_head', 'bali_sands_js_class', 1 );
-
-/**
- * Mark the document as JS-enabled before paint, so the no-JS hover fallback steps aside.
- */
-function bali_sands_js_class() {
-	echo "<script>document.documentElement.classList.add('bs-js');</script>\n";
 }
 
 add_action( 'admin_notices', 'bali_sands_plugin_notice' );

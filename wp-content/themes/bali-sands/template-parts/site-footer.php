@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
 $bs_wave_from = apply_filters( 'bali_sands_footer_wave_from', is_front_page() ? '#faf6ee' : '#ffffff' );
 $bs_abn       = bali_sands_yard( 'bs_abn' );
 $bs_phone     = bali_sands_yard( 'bs_phone' );
-$bs_legal     = bali_sands_menu_tree( 'legal' );
+$bs_legal     = function_exists( 'bs_menu_tree' ) ? bs_menu_tree( 'legal' ) : array();
 ?>
 <footer class="bs-footer">
 	<?php bali_sands_wave( $bs_wave_from, '#201c17' ); ?>

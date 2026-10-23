@@ -43,7 +43,13 @@ function bs_setup_page() {
 	}
 	$log = null;
 	if ( isset( $_POST['bs_run_setup'] ) && check_admin_referer( 'bs_run_setup' ) ) {
-		$log = bs_run_setup( ! empty( $_POST['bs_rebuild_home'] ) );
+		$log = bs_run_setup(
+			array(
+				'rebuild_home'    => ! empty( $_POST['bs_rebuild_home'] ),
+				'rebuild_header'  => ! empty( $_POST['bs_rebuild_header'] ),
+				'replace_headers' => ! empty( $_POST['bs_replace_headers'] ),
+			)
+		);
 		delete_transient( 'bs_setup_notice' );
 	}
 
@@ -52,14 +58,16 @@ function bs_setup_page() {
 		array( 'Elementor', did_action( 'elementor/loaded' ) > 0, true ),
 		array( 'Gravity Forms (quote form)', class_exists( 'GFAPI' ), true ),
 		array( 'ACF Pro (Yard details, tile and dropdown fields)', function_exists( 'acf_add_options_page' ), false ),
-		array( 'Elementor Pro (optional: Theme Builder, popups)', defined( 'ELEMENTOR_PRO_VERSION' ), false ),
+		array( 'Elementor Pro (site header in Theme Builder)', defined( 'ELEMENTOR_PRO_VERSION' ), false ),
 		array( 'JetEngine (optional: category page listings later)', class_exists( 'Jet_Engine' ), false ),
 	);
-	$home_id = (int) get_option( 'bs_home_page_id' );
+	$home_id   = (int) get_option( 'bs_home_page_id' );
+	$header_id = (int) get_option( 'bs_header_template_id' );
+	$others    = defined( 'ELEMENTOR_PRO_VERSION' ) ? bs_other_active_headers() : array();
 	?>
 	<div class="wrap">
 		<h1><?php esc_html_e( 'Bali Sands setup', 'bali-sands' ); ?></h1>
-		<p><?php esc_html_e( 'Creates the product ranges, the dropdown menu, the quote form and the homepage, and sets Elementor\'s colours and fonts. Safe to run again: it only adds what is missing.', 'bali-sands' ); ?></p>
+		<p><?php esc_html_e( 'Creates the product ranges, the dropdown menu, the quote form, the homepage and (with Elementor Pro) the site header, and sets Elementor\'s colours and fonts. Safe to run again: it only adds what is missing.', 'bali-sands' ); ?></p>
 
 		<h2><?php esc_html_e( 'Before you run it', 'bali-sands' ); ?></h2>
 		<table class="widefat striped" style="max-width:640px">
@@ -86,6 +94,22 @@ function bs_setup_page() {
 			<?php if ( $home_id && get_post( $home_id ) ) : ?>
 				<p><label><input type="checkbox" name="bs_rebuild_home" value="1"> <?php esc_html_e( 'Rebuild the homepage layout (replaces any Elementor edits to the homepage)', 'bali-sands' ); ?></label></p>
 			<?php endif; ?>
+			<?php if ( $header_id && get_post( $header_id ) ) : ?>
+				<p><label><input type="checkbox" name="bs_rebuild_header" value="1"> <?php esc_html_e( 'Rebuild the Elementor header (replaces any Elementor edits to "Bali Sands header")', 'bali-sands' ); ?></label></p>
+			<?php endif; ?>
+			<?php if ( $others ) : ?>
+				<p><label><input type="checkbox" name="bs_replace_headers" value="1" checked> 
+				<?php
+				echo esc_html(
+					sprintf(
+						/* translators: %s: template names */
+						__( 'Stop showing the other header template (%s), so the Bali Sands header is used. It stays under Templates.', 'bali-sands' ),
+						implode( ', ', wp_list_pluck( $others, 'post_title' ) )
+					)
+				);
+				?>
+				</label></p>
+			<?php endif; ?>
 			<?php submit_button( __( 'Run setup', 'bali-sands' ), 'primary', 'bs_run_setup', false ); ?>
 		</form>
 
@@ -107,10 +131,18 @@ function bs_setup_page() {
 /**
  * Run every setup step.
  *
- * @param bool $rebuild_home Overwrite the homepage's Elementor data.
+ * @param array $opts rebuild_home, rebuild_header, replace_headers (bools).
  * @return string[] Log lines.
  */
-function bs_run_setup( $rebuild_home = false ) {
+function bs_run_setup( $opts = array() ) {
+	$opts = wp_parse_args(
+		$opts,
+		array(
+			'rebuild_home'    => false,
+			'rebuild_header'  => false,
+			'replace_headers' => false,
+		)
+	);
 	$log = array();
 	bs_register_post_types();
 
@@ -122,7 +154,8 @@ function bs_run_setup( $rebuild_home = false ) {
 	$form = bs_create_quote_form();
 	$log[] = is_wp_error( $form ) ? 'Quote form skipped: ' . $form->get_error_message() . ' Run setup again once it is active.' : 'Quote form ready (Gravity form #' . $form . ').';
 
-	$log[] = bs_setup_homepage( $rebuild_home );
+	$log[] = bs_setup_homepage( $opts['rebuild_home'] );
+	$log[] = bs_setup_elementor_header( $opts['rebuild_header'], $opts['replace_headers'] );
 	$log[] = bs_setup_elementor_kit();
 
 	if ( did_action( 'elementor/loaded' ) ) {

@@ -16,7 +16,8 @@ The homepage is an ordinary Elementor page, so everything on it can be edited in
    - **Elementor** (required)
    - **Gravity Forms** (required for the quote form)
    - **ACF Pro** (recommended: it adds the editing screens for Yard details, tiles and dropdown thumbnails)
-   - Elementor Pro and JetEngine are optional. Nothing here needs them yet.
+   - **Elementor Pro** (recommended: setup builds the site header as a Theme Builder template you can edit in Elementor). Without it the theme draws the same header itself.
+   - JetEngine is optional. Nothing here needs it yet.
    - WooCommerce is **not** used.
 2. Copy both folders from `wp-content/` into the site's `wp-content/`.
 3. **Appearance → Themes**: activate **Bali Sands**.
@@ -28,6 +29,7 @@ The homepage is an ordinary Elementor page, so everything on it can be edited in
    - creates the **Main menu** with its six dropdowns, plus the two footer lists, and assigns them
    - creates the **Get a quote** Gravity form
    - creates the **Home** page from the design and sets it as the front page
+   - with Elementor Pro, creates the **Bali Sands header** (Templates → Theme Builder → Header) and shows it on the entire site. If another header template is already showing, setup offers to switch it off. That template isn't deleted.
    - sets Elementor's global colours, Open Sans and the 1280px content width
 
    It's safe to run again. It only adds what's missing. The homepage layout is only replaced if you tick **Rebuild the homepage layout**.
@@ -37,6 +39,7 @@ The homepage is an ordinary Elementor page, so everything on it can be edited in
 | What | Where |
 | --- | --- |
 | Phone, email, address, ABN, Maps link, opening hours, green-bar text, footer blurb, tipper size | **Yard details** (ACF Pro options page). The "Open today until 4:30pm" badge, footer hours and calculator all read from here. |
+| Header (Elementor Pro) | **Templates → Theme Builder → Header → Bali Sands header.** The green bar is two Icon List widgets, then Site Logo, Site Title and the **BS Header menu** widget. Untick *Rebuild the Elementor header* in setup if you've edited it. |
 | Homepage text, buttons, photos, review cards | **Pages → Home → Edit with Elementor.** Each section is a *BS* widget under the "Bali Sands" category. |
 | The 12 range tiles (name, subtitle, photo, swatch colour, link, order) | **Product ranges.** Featured image = tile photo. *Excerpt* = subtitle. *Order* = position. |
 | Dropdown rows | **Appearance → Menus → Main menu.** The grey text under each row is the menu item **Description** (turn it on under *Screen Options*). Thumbnail, swatch and "See all" label are ACF fields on each item. |
@@ -55,6 +58,7 @@ The homepage is an ordinary Elementor page, so everything on it can be edited in
 | BS Numbered cards | "Why people come back" |
 | BS Reviews | "What customers say" |
 | BS Quote form | "Tell us about the job" and the Gravity form |
+| BS Header menu | The header dropdown menu (header template). Below 1180px it becomes a burger with a full-width drawer. |
 | BS Wave divider | The wavy edges. Set *Colour above* and *Colour below* to match the sections either side. |
 
 Links can use `{tel}` (the yard phone number) and `{maps}` (the Maps link). Text can use `{phone}`, `{address}` and `{hours}`.
@@ -75,4 +79,5 @@ See [`docs/CLIENT-CHECKLIST.md`](docs/CLIENT-CHECKLIST.md) for everything still 
 
 - Range and menu fields are read with `get_post_meta()` and `get_option('options_…')`, so the front end works without ACF. ACF only adds the editing screens.
 - `bs_range` is a plain post type with a `bs_department` taxonomy, ready for JetEngine Listings when the category pages are built.
-- If an Elementor Pro Theme Builder header or footer is published, it replaces the theme's own.
+- If an Elementor Pro Theme Builder header or footer is published, it replaces the theme's own. The dropdown menu (`includes/header-menu.php`, `assets/css/header-menu.css`, `assets/js/header-menu.js` in the plugin) is shared by both headers.
+- The green bar in the Elementor header is static text copied from Yard details when setup builds it. The theme's own header reads Yard details live.
