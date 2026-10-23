@@ -2,8 +2,10 @@
 /**
  * Setup step: the site header as an Elementor Pro Theme Builder template.
  *
- * Green top bar (two Icon List widgets), Site Logo + Site Title, and the
- * BS Header menu widget, shown on the entire site.
+ * Built from named Elementor containers so each part (top bar, brand,
+ * navigation, button) can be selected and styled on its own: green top bar
+ * (two Icon List widgets), Site Logo + Site Title, the BS Header menu widget
+ * and a Button widget, shown on the entire site.
  *
  * @package BaliSands
  */
@@ -239,21 +241,63 @@ function bs_el_topbar_list( $seed, $items, $side ) {
 }
 
 /**
+ * Flex gap value.
+ *
+ * @param int $col Column gap (px).
+ * @param int $row Row gap (px).
+ * @return array
+ */
+function bs_el_gap( $col, $row ) {
+	return array(
+		'unit'     => 'px',
+		'size'     => $col,
+		'column'   => (string) $col,
+		'row'      => (string) $row,
+		'isLinked' => false,
+	);
+}
+
+/**
+ * A named container. The name shows in Elementor's Navigator, so each
+ * part of the header can be found, selected and styled on its own.
+ *
+ * @param string $seed     Id seed.
+ * @param string $name     Navigator name.
+ * @param array  $settings Container settings.
+ * @param array  $elements Children.
+ * @param bool   $inner    Nested container.
+ * @return array
+ */
+function bs_el_box( $seed, $name, $settings, $elements, $inner = true ) {
+	return array(
+		'id'       => bs_el_id( $seed ),
+		'elType'   => 'container',
+		'settings' => array_merge(
+			array(
+				'_title'           => $name,
+				'content_width'    => 'full',
+				'flex_direction'   => 'row',
+				'flex_align_items' => 'center',
+				'flex_gap'         => bs_el_gap( 0, 0 ),
+				'padding'          => bs_el_pad( array( 0, 0, 0, 0 ) ),
+			),
+			$settings
+		),
+		'elements' => $elements,
+		'isInner'  => $inner,
+	);
+}
+
+/**
  * The header template's Elementor elements.
+ *
+ * Every part is its own container with its own background (colour,
+ * gradient, image, overlay): Header › Top bar (left, right) › Main bar
+ * (Brand, Navigation, Button).
  *
  * @return array
  */
 function bs_header_elements() {
-	$gap = static function ( $col, $row ) {
-		return array(
-			'unit'     => 'px',
-			'size'     => $col,
-			'column'   => (string) $col,
-			'row'      => (string) $row,
-			'isLinked' => false,
-		);
-	};
-
 	$left  = array();
 	foreach ( bs_lines( bs_yard( 'bs_topbar_left' ) ) as $text ) {
 		$left[] = array( $text, '' );
@@ -264,17 +308,14 @@ function bs_header_elements() {
 	}
 	$right[] = array( bs_yard( 'bs_phone' ), bs_tel_href() );
 
-	$topbar = array(
-		'id'       => bs_el_id( 'h-topbar' ),
-		'elType'   => 'container',
-		'settings' => array(
-			'content_width'               => 'full',
-			'flex_direction'              => 'row',
+	$topbar = bs_el_box(
+		'h-topbar',
+		'Top bar',
+		array(
 			'flex_justify_content'        => 'space-between',
 			'flex_justify_content_mobile' => 'center',
-			'flex_align_items'            => 'center',
 			'flex_wrap'                   => 'wrap',
-			'flex_gap'                    => $gap( 22, 6 ),
+			'flex_gap'                    => bs_el_gap( 22, 6 ),
 			'padding'                     => bs_el_pad( array( 11, 40, 11, 40 ) ),
 			'padding_tablet'              => bs_el_pad( array( 11, 24, 11, 24 ) ),
 			'padding_mobile'              => bs_el_pad( array( 9, 16, 9, 16 ) ),
@@ -282,11 +323,25 @@ function bs_header_elements() {
 			'background_color'            => '#2F4034',
 			'css_classes'                 => 'bs-etopbar',
 		),
-		'elements' => array(
-			bs_el_topbar_list( 'h-tb-left', $left, 'left' ),
-			bs_el_topbar_list( 'h-tb-right', $right, 'right' ),
-		),
-		'isInner'  => true,
+		array(
+			bs_el_box(
+				'h-tb-left-box',
+				'Top bar: left',
+				array(
+					'flex_justify_content_mobile' => 'center',
+				),
+				array( bs_el_topbar_list( 'h-tb-left', $left, 'left' ) )
+			),
+			bs_el_box(
+				'h-tb-right-box',
+				'Top bar: right',
+				array(
+					'flex_justify_content'        => 'flex-end',
+					'flex_justify_content_mobile' => 'center',
+				),
+				array( bs_el_topbar_list( 'h-tb-right', $right, 'right' ) )
+			),
+		)
 	);
 
 	$logo = array(
@@ -294,17 +349,15 @@ function bs_header_elements() {
 		'elType'     => 'widget',
 		'widgetType' => 'theme-site-logo',
 		'settings'   => array(
-			'width'         => array(
+			'width'        => array(
 				'unit' => 'px',
 				'size' => 51,
 			),
-			'width_mobile'  => array(
+			'width_mobile' => array(
 				'unit' => 'px',
 				'size' => 40,
 			),
-			'_margin'       => bs_el_pad( array( 16, 0, 16, 0 ) ),
-			'_margin_mobile' => bs_el_pad( array( 12, 0, 12, 0 ) ),
-			'_css_classes'  => 'bs-ebrand',
+			'_css_classes' => 'bs-ebrand',
 		),
 		'elements'   => array(),
 	);
@@ -338,26 +391,89 @@ function bs_header_elements() {
 		'elements'   => array(),
 	);
 
-	$menu = array(
-		'id'         => bs_el_id( 'h-menu' ),
-		'elType'     => 'widget',
-		'widgetType' => 'bs-header-menu',
-		'settings'   => array(
-			'menu' => '',
+	$brand = bs_el_box(
+		'h-brand',
+		'Brand',
+		array(
+			'flex_gap'       => bs_el_gap( 11, 0 ),
+			'padding'        => bs_el_pad( array( 16, 0, 16, 0 ) ),
+			'padding_mobile' => bs_el_pad( array( 12, 0, 12, 0 ) ),
+			'_flex_size'     => 'grow',
+			'css_classes'    => 'bs-ebrandbox',
 		),
-		'elements'   => array(),
+		array( $logo, $title )
 	);
 
-	$bar = array(
-		'id'       => bs_el_id( 'h-bar' ),
-		'elType'   => 'container',
-		'settings' => array(
-			'content_width'         => 'full',
-			'flex_direction'        => 'row',
-			'flex_justify_content'  => 'flex-start',
-			'flex_align_items'      => 'center',
+	$nav = bs_el_box(
+		'h-nav',
+		'Navigation',
+		array(
+			'flex_justify_content' => 'flex-end',
+			'css_classes'          => 'bs-enav',
+		),
+		array(
+			array(
+				'id'         => bs_el_id( 'h-menu' ),
+				'elType'     => 'widget',
+				'widgetType' => 'bs-header-menu',
+				'settings'   => array(
+					'menu'     => '',
+					'cta_item' => 'mobile',
+				),
+				'elements'   => array(),
+			),
+		)
+	);
+
+	$button = bs_el_box(
+		'h-cta',
+		'Button',
+		array(
+			'padding'     => bs_el_pad( array( 0, 0, 0, 12 ) ),
+			'hide_mobile' => 'hidden-mobile',
+			'css_classes' => 'bs-ecta',
+		),
+		array(
+			array(
+				'id'         => bs_el_id( 'h-cta-btn' ),
+				'elType'     => 'widget',
+				'widgetType' => 'button',
+				'settings'   => array_merge(
+					array(
+						'text'                               => 'Get a quote',
+						'link'                               => array(
+							'url'         => '/#quote',
+							'is_external' => '',
+							'nofollow'    => '',
+						),
+						'background_background'              => 'classic',
+						'background_color'                   => '#E2A63B',
+						'button_text_color'                  => '#201C17',
+						'button_background_hover_background' => 'classic',
+						'button_background_hover_color'      => '#D6982B',
+						'hover_color'                        => '#201C17',
+						'border_radius'                      => array(
+							'unit'     => 'px',
+							'top'      => '6',
+							'right'    => '6',
+							'bottom'   => '6',
+							'left'     => '6',
+							'isLinked' => true,
+						),
+						'text_padding'                       => bs_el_pad( array( 13, 20, 13, 20 ) ),
+					),
+					bs_el_type( 'typography', '700', 14 )
+				),
+				'elements'   => array(),
+			),
+		)
+	);
+
+	$bar = bs_el_box(
+		'h-bar',
+		'Main bar',
+		array(
 			'flex_wrap'             => 'nowrap',
-			'flex_gap'              => $gap( 11, 0 ),
 			'padding'               => bs_el_pad( array( 0, 40, 0, 40 ) ),
 			'padding_tablet'        => bs_el_pad( array( 0, 24, 0, 24 ) ),
 			'padding_mobile'        => bs_el_pad( array( 0, 16, 0, 16 ) ),
@@ -369,24 +485,21 @@ function bs_header_elements() {
 			'css_classes'           => 'bs-ebar',
 			'z_index'               => 20,
 		),
-		'elements' => array( $logo, $title, $menu ),
-		'isInner'  => true,
+		array( $brand, $nav, $button )
 	);
 
 	return array(
-		array(
-			'id'       => bs_el_id( 'h-wrap' ),
-			'elType'   => 'container',
-			'settings' => array(
-				'content_width'  => 'full',
-				'flex_direction' => 'column',
-				'flex_gap'       => $gap( 0, 0 ),
-				'padding'        => bs_el_pad( array( 0, 0, 0, 0 ) ),
-				'css_classes'    => 'bs-eheader',
-				'z_index'        => 50,
+		bs_el_box(
+			'h-wrap',
+			'Header',
+			array(
+				'flex_direction'   => 'column',
+				'flex_align_items' => 'stretch',
+				'css_classes'      => 'bs-eheader',
+				'z_index'          => 50,
 			),
-			'elements' => array( $topbar, $bar ),
-			'isInner'  => false,
+			array( $topbar, $bar ),
+			false
 		),
 	);
 }

@@ -8,6 +8,19 @@
 	--bs-amber: #e2a63b;
 	--bs-sand: #faf6ee;
 	--bs-line: #ece6da;
+	/* Set from the widget's Style tab. */
+	--bs-menu-link: var(--bs-ink);
+	--bs-menu-link-active: var(--bs-green);
+	--bs-menu-panel-bg: #fff;
+	--bs-menu-panel-border: var(--bs-green);
+	--bs-menu-row-hover: var(--bs-green-tint);
+	--bs-menu-row-name: var(--bs-green);
+	--bs-menu-row-sub: var(--bs-muted);
+	--bs-menu-burger: var(--bs-ink);
+	--bs-menu-drawer-bg: #fff;
+	--bs-menu-drawer-panel-bg: var(--bs-sand);
+	--bs-menu-cta-bg: var(--bs-amber);
+	--bs-menu-cta-color: var(--bs-ink);
 	display: flex; align-items: center;
 	font-family: "Open Sans", system-ui, sans-serif;
 }
@@ -22,10 +35,10 @@
 .bs-menu .bs-nav__link:focus {
 	display: flex; align-items: center; gap: 6px;
 	margin: 0; padding: 0 10px; border: 0; border-radius: 0; background: none; box-shadow: none;
-	font: 600 14px/1 "Open Sans", sans-serif; color: var(--bs-ink); text-decoration: none; text-transform: none; letter-spacing: 0; white-space: nowrap; cursor: pointer;
+	font: 600 14px/1 "Open Sans", sans-serif; color: var(--bs-menu-link); text-decoration: none; text-transform: none; letter-spacing: 0; white-space: nowrap; cursor: pointer;
 }
 .bs-menu .has-panel > .bs-nav__toggle { padding: 28px 10px; }
-.bs-menu .bs-nav__link:hover, .bs-menu .is-open > .bs-nav__toggle, .bs-menu .bs-nav__link[aria-current] { color: var(--bs-green); }
+.bs-menu .bs-nav__link:hover, .bs-menu .is-open > .bs-nav__toggle, .bs-menu .bs-nav__link[aria-current] { color: var(--bs-menu-link-active); }
 .bs-menu .bs-nav__link:focus-visible, .bs-menu .bs-nav__cta:focus-visible, .bs-menu .bs-panel a:focus-visible, .bs-menu .bs-burger:focus-visible { outline: 2px solid var(--bs-green); outline-offset: 2px; border-radius: 4px; }
 .bs-nav__chev::before { content: "▾"; font-size: 11px; }
 .is-open > .bs-nav__toggle .bs-nav__chev::before { content: "▴"; }
@@ -33,17 +46,17 @@
 .bs-menu a.bs-nav__cta,
 .bs-menu a.bs-nav__cta:hover {
 	display: inline-block; margin-left: 6px; padding: 13px 20px; border-radius: 6px;
-	background: var(--bs-amber); color: var(--bs-ink);
+	background: var(--bs-menu-cta-bg); color: var(--bs-menu-cta-color);
 	font: 700 14px/1 "Open Sans", sans-serif; text-decoration: none; white-space: nowrap;
 }
-.bs-menu a.bs-nav__cta:hover { background: #d6982b; }
+.bs-menu a.bs-nav__cta:hover { filter: brightness(.94); }
 
 /* Dropdown panel */
 .bs-panel {
 	display: none;
 	position: absolute; top: 100%; left: -14px; z-index: 100; margin-top: -6px;
 	width: 360px; padding: 12px;
-	background: #fff; border: 2px solid var(--bs-green); border-radius: 16px;
+	background: var(--bs-menu-panel-bg); border: 2px solid var(--bs-menu-panel-border); border-radius: 16px;
 	box-shadow: 0 18px 40px rgba(32, 28, 23, .16);
 	cursor: default;
 }
@@ -57,15 +70,15 @@ html:not(.bs-js) .has-panel:focus-within > .bs-panel { display: block; }
 	display: flex; align-items: center; gap: 14px;
 	padding: 11px 12px; border-radius: 10px; text-decoration: none; color: inherit;
 }
-.bs-menu a.bs-panel__row:hover, .bs-menu a.bs-panel__row:focus { background: var(--bs-green-tint); }
+.bs-menu a.bs-panel__row:hover, .bs-menu a.bs-panel__row:focus { background: var(--bs-menu-row-hover); }
 .bs-panel__thumb { width: 40px; height: 40px; flex: none; border-radius: 8px; background-color: #e2ddd2; background-size: cover; background-position: center; }
 .bs-panel__text { display: block; }
-.bs-panel__name { display: block; font: 700 15.5px/1.25 "Open Sans", sans-serif; color: var(--bs-green); }
-.bs-panel__sub { display: block; margin-top: 3px; font: 400 12.5px/1.4 "Open Sans", sans-serif; color: var(--bs-muted); }
+.bs-panel__name { display: block; font: 700 15.5px/1.25 "Open Sans", sans-serif; color: var(--bs-menu-row-name); }
+.bs-panel__sub { display: block; margin-top: 3px; font: 400 12.5px/1.4 "Open Sans", sans-serif; color: var(--bs-menu-row-sub); }
 .bs-menu a.bs-panel__all,
 .bs-menu a.bs-panel__all:hover {
 	display: block; margin: 8px 4px 0; padding: 14px 8px 6px; border-top: 1px solid var(--bs-line);
-	font: 700 13.5px/1 "Open Sans", sans-serif; color: var(--bs-green); text-decoration: none;
+	font: 700 13.5px/1 "Open Sans", sans-serif; color: var(--bs-menu-row-name); text-decoration: none;
 }
 .bs-menu a.bs-panel__all:hover { text-decoration: underline; text-underline-offset: 4px; }
 
@@ -74,7 +87,7 @@ html:not(.bs-js) .has-panel:focus-within > .bs-panel { display: block; }
 .bs-menu .bs-burger:hover,
 .bs-menu .bs-burger:focus {
 	display: none;
-	width: 44px; height: 44px; margin: 0 -8px 0 0; padding: 0; border: 0; border-radius: 6px; background: none; color: var(--bs-ink); cursor: pointer;
+	width: 44px; height: 44px; margin: 0 -8px 0 0; padding: 0; border: 0; border-radius: 6px; background: none; color: var(--bs-menu-burger); cursor: pointer;
 }
 .bs-burger__lines, .bs-burger__lines::before, .bs-burger__lines::after {
 	display: block; width: 24px; height: 2.5px; margin: 0 auto; border-radius: 2px; background: currentColor; transition: transform .2s, opacity .2s;
@@ -89,12 +102,26 @@ html:not(.bs-js) .has-panel:focus-within > .bs-panel { display: block; }
 
 .bs-menu__notice { font: 600 13px/1.4 "Open Sans", sans-serif; color: #b32d2e; }
 
+/* "Get a quote" menu item: hidden, or only in the mobile drawer. */
+.bs-menu--cta-hide .bs-nav__item--cta { display: none; }
+@media (min-width: 768px) {
+	.bs-menu--cta-mobile .bs-nav__item--cta { display: none; }
+}
+
 /*
  * The drawer hangs off the header bar, not the menu, so it spans the full width.
- * In the Elementor header, the widget steps out of the way and the bar container is the anchor.
+ * In the Elementor header, the widget and its Navigation container step out of
+ * the way and the Main bar container is the anchor.
  */
 .elementor-widget.elementor-widget-bs-header-menu { position: static; }
+.e-con.bs-enav { --position: static; position: static; }
 .e-con.bs-ebar { position: relative; }
+
+/*
+ * Containers inside the Elementor header size to their content unless a width
+ * is set on them in Elementor (that setting is more specific and wins).
+ */
+.bs-eheader .e-con { --width: auto; }
 
 @media (max-width: 1180px) {
 	.bs-menu .bs-burger, .bs-menu .bs-burger:hover, .bs-menu .bs-burger:focus { display: block; }
@@ -103,7 +130,7 @@ html:not(.bs-js) .has-panel:focus-within > .bs-panel { display: block; }
 		position: absolute; top: 100%; left: 0; right: 0; z-index: 100;
 		max-height: calc(100vh - 100px); overflow-y: auto;
 		padding: 8px var(--bs-gutter, 24px) 24px;
-		background: #fff; border-bottom: 1px solid var(--bs-line);
+		background: var(--bs-menu-drawer-bg); border-bottom: 1px solid var(--bs-line);
 		box-shadow: 0 18px 30px rgba(32, 28, 23, .12);
 	}
 	.bs-menu.is-menu-open .bs-nav { display: block; }
@@ -117,7 +144,7 @@ html:not(.bs-js) .has-panel:focus-within > .bs-panel { display: block; }
 	.bs-menu a.bs-nav__cta, .bs-menu a.bs-nav__cta:hover { display: block; margin: 0; padding: 16px; text-align: center; font-size: 15px; }
 	.bs-panel, .bs-panel.is-flipped {
 		position: static; width: auto; margin: 0 0 12px; padding: 4px;
-		border: 0; border-radius: 12px; box-shadow: none; background: var(--bs-sand);
+		border: 0; border-radius: 12px; box-shadow: none; background: var(--bs-menu-drawer-panel-bg);
 	}
 	html:not(.bs-js) .has-panel:hover > .bs-panel { display: none; }
 }
@@ -129,6 +156,3 @@ html:not(.bs-js) .has-panel:focus-within > .bs-panel { display: block; }
 @media (prefers-reduced-motion: reduce) {
 	.bs-burger__lines, .bs-burger__lines::before, .bs-burger__lines::after { transition: none; }
 }
-
-/* Elementor header: push the menu to the right of the logo and site title. */
-.elementor-widget.elementor-widget-bs-header-menu { margin-left: auto; }

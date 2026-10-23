@@ -39,7 +39,7 @@ The homepage is an ordinary Elementor page, so everything on it can be edited in
 | What | Where |
 | --- | --- |
 | Phone, email, address, ABN, Maps link, opening hours, green-bar text, footer blurb, tipper size | **Yard details** (ACF Pro options page). The "Open today until 4:30pm" badge, footer hours and calculator all read from here. |
-| Header (Elementor Pro) | **Templates → Theme Builder → Header → Bali Sands header.** The green bar is two Icon List widgets, then Site Logo, Site Title and the **BS Header menu** widget. Untick *Rebuild the Elementor header* in setup if you've edited it. |
+| Header (Elementor Pro) | **Templates → Theme Builder → Header → Bali Sands header.** It's built from named containers (open the Navigator to see them): **Header** › **Top bar** (*Top bar: left*, *Top bar: right*) › **Main bar** (**Brand** with Site Logo and Site Title, **Navigation** with the BS Header menu, **Button** with "Get a quote"). Click any container to change its own background (colour, gradient, image, overlay), padding and border. Menu link, dropdown and drawer colours are in the BS Header menu widget's **Style** tab. Untick *Rebuild the Elementor header* in setup if you've edited it. |
 | Homepage text, buttons, photos, review cards | **Pages → Home → Edit with Elementor.** Each section is a *BS* widget under the "Bali Sands" category. |
 | The 12 range tiles (name, subtitle, photo, swatch colour, link, order) | **Product ranges.** Featured image = tile photo. *Excerpt* = subtitle. *Order* = position. |
 | Dropdown rows | **Appearance → Menus → Main menu.** The grey text under each row is the menu item **Description** (turn it on under *Screen Options*). Thumbnail, swatch and "See all" label are ACF fields on each item. |
@@ -58,7 +58,7 @@ The homepage is an ordinary Elementor page, so everything on it can be edited in
 | BS Numbered cards | "Why people come back" |
 | BS Reviews | "What customers say" |
 | BS Quote form | "Tell us about the job" and the Gravity form |
-| BS Header menu | The header dropdown menu (header template). Below 1180px it becomes a burger with a full-width drawer. |
+| BS Header menu | The header dropdown menu (header template). Below 1180px it becomes a burger with a full-width drawer. Colours for links, dropdown panels and the drawer are in its Style tab. |
 | BS Wave divider | The wavy edges. Set *Colour above* and *Colour below* to match the sections either side. |
 
 Links can use `{tel}` (the yard phone number) and `{maps}` (the Maps link). Text can use `{phone}`, `{address}` and `{hours}`.
