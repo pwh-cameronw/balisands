@@ -106,6 +106,11 @@ The name, photo, short description and "Best for" come from Elementor Pro's Post
 
 New products get a starting write-up with four headings (What's in it, How to use it, How much you'll need, Good for). Text in **[square brackets]** needs the yard's real details. Products made by an earlier version keep their one-line write-up until it's edited.
 
+### Header width
+The header's backgrounds (green top bar, white bar) run the full width of the screen. Its content (logo, menu and **Get a quote**) is boxed to the site's content width, 1200px, so it sits centred and lines up with the page sections and footer. To change the width, go to **Site Settings → Layout → Content Width**. It applies to the whole site.
+
+**Updating from 1.3.0 or earlier:** run setup with **Rebuild the header and footer layouts** ticked. Or, in the header template, select the top bar and the white bar containers and set **Layout → Content Width** to *Boxed*.
+
 ### Changing section backgrounds
 Each section is a top-level container whose background is a **Global Color**. To change one section, select it and go to **Style → Background**, then pick another global colour (or a custom one). To change a colour everywhere, go to **Site Settings → Global Colors**.
 

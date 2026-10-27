@@ -4,7 +4,8 @@
  *
  * Header: green top bar, logo + wordmark, JetMenu "Mega Menu" widget (falls
  * back to Elementor Pro's Nav Menu if JetMenu isn't active) and the "Get a
- * quote" button. Footer: four columns and the small print. All separate
+ * quote" button. Backgrounds run full width; the content is boxed to the site
+ * width, so on wide screens it lines up with the page sections below. Footer: four columns and the small print. All separate
  * widgets; backgrounds are Global Colors.
  *
  * @package BaliSandsSite
@@ -86,6 +87,8 @@ function bss_header_elements( $menu_id ) {
 		'header/topbar',
 		bss_merge(
 			array(
+				// Boxed to the site width (Site Settings → Layout), like the page sections and footer.
+				'content_width'               => 'boxed',
 				'flex_direction'              => 'row',
 				'flex_justify_content'        => 'space-between',
 				'flex_justify_content_mobile' => 'center',
@@ -175,6 +178,7 @@ function bss_header_elements( $menu_id ) {
 		'header/bar',
 		bss_merge(
 			array(
+				'content_width'        => 'boxed',
 				'flex_direction'       => 'row',
 				'flex_justify_content' => 'space-between',
 				'flex_align_items'     => 'center',
