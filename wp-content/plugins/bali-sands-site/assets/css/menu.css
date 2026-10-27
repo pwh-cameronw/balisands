@@ -236,8 +236,14 @@
 	.bs-main-menu .jet-mega-menu,
 	.bs-main-menu .jet-mega-menu-container,
 	.bs-main-menu .jet-mega-menu-list,
-	.bs-main-menu .jet-mega-menu-item--top-level {
+	.bs-main-menu .jet-mega-menu-item--top-level:has(.jet-mega-menu-mega-container),
+	.bs-main-menu .jet-mega-menu-item--top-level.bs-mega-item {
 		position: static !important;
+	}
+
+	/* Ordinary dropdowns (Bali imports) still open under their own item. */
+	.bs-main-menu .jet-mega-menu-item--top-level:not(.bs-mega-item):not(:has(.jet-mega-menu-mega-container)) {
+		position: relative !important;
 	}
 
 	/* …so the boxed content area is. */
