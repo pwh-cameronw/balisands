@@ -21,6 +21,8 @@ add_action( 'init', 'bss_register_products' );
 add_action( 'acf/init', 'bss_register_product_fields' );
 add_action( 'wp_enqueue_scripts', 'bss_product_styles' );
 add_shortcode( 'bs_product_count', 'bss_product_count_shortcode' );
+add_shortcode( 'bs_product_crumbs', 'bss_product_crumbs_shortcode' );
+add_shortcode( 'bs_product_sold_as', 'bss_product_sold_as_shortcode' );
 
 /**
  * Register the post type and taxonomies.
@@ -184,4 +186,73 @@ function bss_product_count_shortcode( $atts ) {
 		)
 	);
 	return esc_html( count( $ids ) . ' ' . $atts['noun'] );
+}
+
+/**
+ * The Product's deepest product category and its parents, top level first.
+ *
+ * @param int $post_id Product id.
+ * @return WP_Term[]
+ */
+function bss_product_term_trail( $post_id ) {
+	$terms = get_the_terms( $post_id, 'bs_product_cat' );
+	if ( ! $terms || is_wp_error( $terms ) ) {
+		return array();
+	}
+	$deepest   = null;
+	$ancestors = array();
+	foreach ( $terms as $term ) {
+		$up = get_ancestors( $term->term_id, 'bs_product_cat', 'taxonomy' );
+		if ( ! $deepest || count( $up ) > count( $ancestors ) ) {
+			$deepest   = $term;
+			$ancestors = $up;
+		}
+	}
+	$trail = array();
+	foreach ( array_reverse( $ancestors ) as $id ) {
+		$term = get_term( $id, 'bs_product_cat' );
+		if ( $term && ! is_wp_error( $term ) ) {
+			$trail[] = $term;
+		}
+	}
+	$trail[] = $deepest;
+	return $trail;
+}
+
+/**
+ * [bs_product_crumbs] — Home / Landscape supplies / Soils / … / Product name.
+ * Each category links to its category page (or its archive if it has none).
+ *
+ * @return string
+ */
+function bss_product_crumbs_shortcode() {
+	$post_id = get_the_ID();
+	if ( ! $post_id ) {
+		return '';
+	}
+	$parts = array( '<a href="' . esc_url( home_url( '/' ) ) . '">Home</a>' );
+	foreach ( bss_product_term_trail( $post_id ) as $term ) {
+		$page = (int) get_term_meta( $term->term_id, 'bss_page_id', true );
+		$url  = $page && get_post( $page ) ? get_permalink( $page ) : get_term_link( $term );
+		$parts[] = is_wp_error( $url ) ? esc_html( $term->name ) : '<a href="' . esc_url( $url ) . '">' . esc_html( $term->name ) . '</a>';
+	}
+	$parts[] = '<strong>' . esc_html( get_the_title( $post_id ) ) . '</strong>';
+	return implode( ' / ', $parts );
+}
+
+/**
+ * [bs_product_sold_as] — the Product's "Sold as" options as pills.
+ *
+ * @return string
+ */
+function bss_product_sold_as_shortcode() {
+	$terms = get_the_terms( get_the_ID(), 'bs_sold_as' );
+	if ( ! $terms || is_wp_error( $terms ) ) {
+		return '';
+	}
+	$out = '';
+	foreach ( $terms as $term ) {
+		$out .= '<span class="bs-tag">' . esc_html( $term->name ) . '</span>';
+	}
+	return '<div class="bs-tags">' . $out . '</div>';
 }

@@ -163,3 +163,85 @@
 .bs-product__pills .jet-listing-dynamic-terms__delimiter {
 	display: none;
 }
+
+/*
+ * Product page (Theme Builder Single template, .bs-product-page__…).
+ * ---------------------------------------------------------------------- */
+
+/* Photo: rounded, cropped to fill. */
+.bs-product-page__photo img {
+	display: block;
+	width: 100%;
+	height: 440px;
+	max-width: none;
+	object-fit: cover;
+	border-radius: 14px;
+}
+
+@media (max-width: 1024px) {
+	.bs-product-page__photo img {
+		height: 360px;
+	}
+}
+
+@media (max-width: 767px) {
+	.bs-product-page__photo img {
+		height: 260px;
+	}
+}
+
+/* No photo yet: a placeholder panel the same size. */
+.bs-product-page__photo .elementor-widget-container:empty,
+.bs-product-page__photo:not(:has(img)) .elementor-widget-container {
+	min-height: 440px;
+	border-radius: 14px;
+	background: var(--e-global-color-bs_photo_dark, #3A4C3E);
+}
+
+/* "Sold as" pills ([bs_product_sold_as]). */
+.bs-tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+
+.bs-tag {
+	display: inline-block;
+	padding: 7px 9px;
+	border-radius: 100px;
+	background: var(--e-global-color-bs_green_tint, #EEF4EA);
+	color: var(--e-global-color-primary, #2F4034);
+	font-family: var(--e-global-typography-bs_pill-font-family, "Open Sans"), sans-serif;
+	font-weight: var(--e-global-typography-bs_pill-font-weight, 700);
+	font-size: var(--e-global-typography-bs_pill-font-size, 12px);
+	line-height: 1;
+}
+
+.bs-tag::before {
+	content: "✓ ";
+}
+
+/* The write-up (Post Content): headings and spacing. */
+.bs-product-page__content h2,
+.bs-product-page__content h3 {
+	margin: 1.4em 0 .4em;
+	color: var(--e-global-color-bs_ink, #201C17);
+	font-family: var(--e-global-typography-bs_card_lg-font-family, "Open Sans"), sans-serif;
+	font-weight: var(--e-global-typography-bs_card_lg-font-weight, 700);
+	font-size: 20px;
+	line-height: 1.3;
+}
+
+.bs-product-page__content > :first-child,
+.bs-product-page__content .elementor-widget-container > :first-child {
+	margin-top: 0;
+}
+
+.bs-product-page__content p {
+	margin: 0 0 1em;
+}
+
+.bs-product-page__content ul {
+	margin: 0 0 1em;
+	padding-left: 1.2em;
+}

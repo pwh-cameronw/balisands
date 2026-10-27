@@ -322,7 +322,6 @@ function bss_category_elements( $key ) {
 	$all   = bss_category_pages();
 	$cat   = $all[ $key ];
 	$pages = bss_pages();
-	$biz   = bss_business();
 	$title = $pages[ $key ][0];
 	$group = $cat['group'];
 
@@ -446,51 +445,9 @@ function bss_category_elements( $key ) {
 		)
 	);
 
-	/* Not sure how much to order? ----------------------------------------- */
+	/* Not sure how much to order? (layout-product.php) ------------------- */
 
-	$cta = bss_section(
-		'cat/cta',
-		'secondary',
-		bss_merge(
-			array(
-				'flex_direction'          => 'row',
-				'flex_direction_tablet'   => 'column',
-				'flex_align_items'        => 'center',
-				'flex_align_items_tablet' => 'flex-start',
-				'flex_gap'                => bss_gap( 40, 24 ),
-				'css_classes'             => 'bs-section bs-section--cat-cta bs-on-dark',
-			),
-			bss_section_pad( 24, 44, true ),
-			bss_wave_top( 'bs_white', true )
-		),
-		array(
-			bss_column(
-				'cat/cta-text',
-				60,
-				array(
-					bss_heading( 'cat/cta-title', 'Not sure how much to order?', 'h2', 'bs_h2_sm', 'bs_white' ),
-					bss_text( 'cat/cta-intro', '<p>Work it out with the calculator, or call the yard with the size of the area and we\'ll tell you what you need.</p>', 'text', 'bs_white', bss_merge( bss_mt( 12 ), bss_max_width( 560 ) ) ),
-				),
-				array( 'width_tablet' => bss_size( 100, '%' ) )
-			),
-			bss_column(
-				'cat/cta-buttons',
-				40,
-				array(
-					bss_button( 'cat/btn-calculator', 'Use the calculator', home_url( '/#calculator' ), 'white' ),
-					bss_button( 'cat/btn-call', $biz['phone'], $biz['tel'], 'outline-light' ),
-				),
-				array(
-					'width_tablet'                => bss_size( 100, '%' ),
-					'flex_direction'              => 'row',
-					'flex_wrap'                   => 'wrap',
-					'flex_justify_content'        => 'flex-end',
-					'flex_justify_content_tablet' => 'flex-start',
-					'flex_gap'                    => bss_gap( 12 ),
-				)
-			),
-		)
-	);
+	$cta = bss_order_band( 'cat', 'bs_white' );
 
 	/* Other categories in the same group ----------------------------------- */
 

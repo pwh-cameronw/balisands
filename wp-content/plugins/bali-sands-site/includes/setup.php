@@ -10,10 +10,11 @@
  * 4. Sets Elementor's Global Colors, Global Fonts, buttons and content width.
  * 5. Creates the Gravity Forms quote form.
  * 6. Creates the Home page in Elementor and sets it as the front page.
- * 7. With Elementor Pro: creates the header and footer in the Theme Builder.
+ * 7. With Elementor Pro: creates the header, footer and product page in the Theme Builder.
  *
  * Safe to run again: it only adds what is missing. The homepage, header and
- * footer layouts are only replaced when their "Rebuild" box is ticked.
+ * footer layouts (and the other built layouts) are only replaced when their
+ * "Rebuild" box is ticked.
  *
  * @package BaliSandsSite
  */
@@ -136,6 +137,7 @@ function bss_setup_page() {
 				'rebuild_categories' => ! empty( $_POST['bss_rebuild_categories'] ),
 				'rebuild_about'      => ! empty( $_POST['bss_rebuild_about'] ),
 				'rebuild_theme'      => ! empty( $_POST['bss_rebuild_theme'] ),
+				'rebuild_product'    => ! empty( $_POST['bss_rebuild_product'] ),
 			)
 		);
 		delete_transient( 'bss_setup_notice' );
@@ -145,7 +147,7 @@ function bss_setup_page() {
 		array( __( 'Hello Elementor parent theme installed', 'bali-sands-site' ), wp_get_theme( 'hello-elementor' )->exists(), true ),
 		array( __( 'Bali Sands child theme active', 'bali-sands-site' ), 'hello-elementor' === get_template() && 'hello-elementor' !== get_stylesheet(), true ),
 		array( __( 'Elementor', 'bali-sands-site' ), did_action( 'elementor/loaded' ) > 0, true ),
-		array( __( 'Elementor Pro (header and footer)', 'bali-sands-site' ), defined( 'ELEMENTOR_PRO_VERSION' ), true ),
+		array( __( 'Elementor Pro (header, footer and product page)', 'bali-sands-site' ), defined( 'ELEMENTOR_PRO_VERSION' ), true ),
 		array( __( 'JetMenu (main menu)', 'bali-sands-site' ), class_exists( 'Jet_Menu' ), true ),
 		array( __( 'Gravity Forms (quote form)', 'bali-sands-site' ), class_exists( 'GFAPI' ), true ),
 		array( __( 'JetEngine (product cards on category pages)', 'bali-sands-site' ), class_exists( 'Jet_Engine' ), true ),
@@ -204,6 +206,9 @@ function bss_setup_page() {
 			<?php if ( get_option( 'bss_header_id' ) || get_option( 'bss_footer_id' ) ) : ?>
 				<p><label><input type="checkbox" name="bss_rebuild_theme" value="1"> <?php esc_html_e( 'Rebuild the header and footer layouts (replaces any Elementor edits to them)', 'bali-sands-site' ); ?></label></p>
 			<?php endif; ?>
+			<?php if ( get_option( 'bss_product_page_id' ) ) : ?>
+				<p><label><input type="checkbox" name="bss_rebuild_product" value="1"> <?php esc_html_e( 'Rebuild the product page layout (replaces any Elementor edits to it)', 'bali-sands-site' ); ?></label></p>
+			<?php endif; ?>
 			<?php submit_button( __( 'Run setup', 'bali-sands-site' ), 'primary', 'bss_run_setup', false ); ?>
 		</form>
 
@@ -223,7 +228,7 @@ function bss_setup_page() {
 /**
  * Run every step.
  *
- * @param array $opts rebuild_home, rebuild_theme.
+ * @param array $opts rebuild_home, rebuild_categories, rebuild_about, rebuild_theme, rebuild_product.
  * @return string[] Log lines.
  */
 function bss_run_setup( $opts ) {
@@ -249,6 +254,7 @@ function bss_run_setup( $opts ) {
 	$log[] = bss_setup_about( ! empty( $opts['rebuild_about'] ) );
 	$log[] = bss_setup_theme_template( 'header', 'Bali Sands header', ! empty( $opts['rebuild_theme'] ) );
 	$log[] = bss_setup_theme_template( 'footer', 'Bali Sands footer', ! empty( $opts['rebuild_theme'] ) );
+	$log[] = bss_setup_theme_template( 'product_page', 'Product page', ! empty( $opts['rebuild_product'] ) );
 
 	if ( did_action( 'elementor/loaded' ) ) {
 		\Elementor\Plugin::$instance->files_manager->clear_cache();
@@ -948,7 +954,7 @@ function bss_setup_products() {
 				'post_type'    => 'bs_product',
 				'post_status'  => 'publish',
 				'post_title'   => $name,
-				'post_content' => '<!-- wp:paragraph --><p>' . esc_html( $short ) . '</p><!-- /wp:paragraph -->',
+				'post_content' => bss_product_content( $best ),
 				'menu_order'   => $i,
 				// Newest first is the listing's default order, so date them to keep the design's order.
 				'post_date'    => wp_date( 'Y-m-d H:i:s', $now - $i * 60 ),
@@ -990,6 +996,28 @@ function bss_setup_products() {
 	}
 
 	return sprintf( 'Products: %d added (Products in the admin menu). Edit their text, photo, categories and "Sold as" there.', $added );
+}
+
+/**
+ * Starting write-up for a new Product's page ("View details"): headings with
+ * [square-bracket] prompts for the yard's own details.
+ *
+ * @param string $best The "Best for" text.
+ * @return string Block markup.
+ */
+function bss_product_content( $best ) {
+	$blocks = array(
+		array( 'What\'s in it', '[What goes into it, where it comes from, and what it looks and feels like.]' ),
+		array( 'How to use it', '[How deep to spread it, whether to dig it in, and anything to do before planting or laying.]' ),
+		array( 'How much you\'ll need', '[Rough coverage, e.g. 1m³ covers about 10m² at 100mm deep. The calculator works it out for any area.]' ),
+		array( 'Good for', $best . '.' ),
+	);
+	$out = '';
+	foreach ( $blocks as $block ) {
+		$out .= '<!-- wp:heading {"level":3} --><h3 class="wp-block-heading">' . esc_html( $block[0] ) . '</h3><!-- /wp:heading -->'
+			. '<!-- wp:paragraph --><p>' . esc_html( $block[1] ) . '</p><!-- /wp:paragraph -->';
+	}
+	return $out;
 }
 
 /**
@@ -1102,17 +1130,29 @@ function bss_setup_about( $rebuild ) {
 }
 
 /**
- * Create (or rebuild) the Theme Builder header or footer and show it site-wide.
+ * Create (or rebuild) a Theme Builder template and set where it shows: the
+ * header and footer on the whole site, the product page on every Product.
  *
- * @param string $type    header | footer.
+ * @param string $type    header | footer | product_page.
  * @param string $title   Template title.
  * @param bool   $rebuild Overwrite existing layout.
  * @return string
  */
 function bss_setup_theme_template( $type, $title, $rebuild ) {
 	if ( ! defined( 'ELEMENTOR_PRO_VERSION' ) ) {
-		return 'header' === $type ? 'Header and footer skipped: Elementor Pro is not active (Hello Elementor\'s basic header and footer show until it is).' : '';
+		if ( 'header' === $type ) {
+			return 'Header and footer skipped: Elementor Pro is not active (Hello Elementor\'s basic header and footer show until it is).';
+		}
+		return 'product_page' === $type ? 'Product page skipped: Elementor Pro is not active, so Products use Hello Elementor\'s plain single layout.' : '';
 	}
+
+	// Elementor template type, display condition, where it shows (for the log).
+	$config = array(
+		'header'       => array( 'header', 'include/general', 'shown on the entire site' ),
+		'footer'       => array( 'footer', 'include/general', 'shown on the entire site' ),
+		'product_page' => array( 'single-post', 'include/singular/bs_product', 'shown on every Product\'s "View details" page' ),
+	);
+	list( $doc_type, $condition, $where ) = $config[ $type ];
 
 	$option = 'bss_' . $type . '_id';
 	$id     = (int) get_option( $option );
@@ -1127,25 +1167,51 @@ function bss_setup_theme_template( $type, $title, $rebuild ) {
 			)
 		);
 		if ( is_wp_error( $id ) || ! $id ) {
-			return ucfirst( $type ) . ' could not be created.';
+			return $title . ' could not be created.';
 		}
 		update_option( $option, $id, false );
-		wp_set_object_terms( $id, $type, 'elementor_library_type' );
+		wp_set_object_terms( $id, $doc_type, 'elementor_library_type' );
 	}
 
 	if ( ! $exists || $rebuild ) {
-		$menus    = (array) get_option( 'bss_menus', array() );
-		$elements = 'header' === $type
-			? bss_header_elements( ! empty( $menus['main'] ) ? (int) $menus['main'] : 0 )
-			: bss_footer_elements();
-		bss_save_elementor( $id, $elements, $type );
+		if ( 'header' === $type ) {
+			$menus    = (array) get_option( 'bss_menus', array() );
+			$elements = bss_header_elements( ! empty( $menus['main'] ) ? (int) $menus['main'] : 0 );
+		} elseif ( 'footer' === $type ) {
+			$elements = bss_footer_elements();
+		} else {
+			$elements = bss_product_page_elements();
+		}
+		bss_save_elementor( $id, $elements, $doc_type );
+
+		if ( 'product_page' === $type ) {
+			// Preview the template in Elementor with the first Product.
+			$preview = get_posts(
+				array(
+					'post_type'      => 'bs_product',
+					'post_status'    => 'publish',
+					'posts_per_page' => 1,
+					'orderby'        => 'menu_order',
+					'order'          => 'ASC',
+					'fields'         => 'ids',
+				)
+			);
+			update_post_meta(
+				$id,
+				'_elementor_page_settings',
+				array(
+					'preview_type' => 'single/bs_product',
+					'preview_id'   => $preview ? (int) $preview[0] : '',
+				)
+			);
+		}
 	}
 
-	update_post_meta( $id, '_elementor_conditions', array( 'include/general' ) );
+	update_post_meta( $id, '_elementor_conditions', array( $condition ) );
 	bss_regenerate_theme_conditions();
 
 	$state = $exists ? ( $rebuild ? 'rebuilt' : 'already exists, layout left as it is' ) : 'created';
-	$line  = sprintf( '%s: %s (Templates → Theme Builder → "%s"), shown on the entire site.', ucfirst( $type ), $state, $title );
+	$line  = sprintf( '"%s": %s (Templates → Theme Builder), %s.', $title, $state, $where );
 	if ( 'header' === $type && ! class_exists( 'Jet_Menu' ) ) {
 		$line .= ' JetMenu is not active, so the header uses Elementor Pro\'s Nav Menu; activate JetMenu and tick "Rebuild the header and footer" to switch.';
 	}

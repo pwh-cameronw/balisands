@@ -45,8 +45,11 @@ To install from WordPress's uploader, zip each folder (`bali-sands-child.zip`, `
    - builds the **Soils** category page in Elementor (design 7a), with a JetEngine Listing Grid of the soils.
    - builds the **About** page in Elementor (design 8a).
    - creates the **header** and **footer** in Elementor Pro's Theme Builder and shows them on the whole site.
+   - creates the **Product page** in the Theme Builder (a Single template) and shows it on every Product's **View details** page.
 
-   It's safe to run again: it only adds what's missing. The homepage, header and footer layouts are only replaced if you tick their **Rebuild** box.
+   It's safe to run again: it only adds what's missing. The homepage, category pages, About page, header, footer and product page layouts are only replaced if you tick their **Rebuild** box.
+
+   **Updating from 1.2.x:** upload the new `bali-sands-site.zip` (WordPress offers to replace the old version), then run setup again. It adds the Product page template and leaves everything else as it is.
 
 ## How it's put together
 
@@ -86,13 +89,22 @@ Each product card is a **Product** post (admin menu → **Products**):
 | "Best for: …" | ACF field **Best for** |
 | Bulk m³ / Bagged pills | **Sold as** checkboxes (sidebar) |
 | Which category page it appears on | **Product categories** checkboxes (sidebar) |
-| **View details** page | The main editor content (the product's own page at `/products/…`) |
+| **View details** page write-up | The main editor content (the "About this product" part of the product's own page at `/products/…`) |
 
 To add a product, go to **Products → Add New**: fill in the fields, tick its category and "Sold as", and publish. It appears on its category page straight away. A product in a sub-category (e.g. *Garden & Veggie Mixes*) also shows on the parent page (*Soils*). Set **Order** (Page Attributes) to control position: lower numbers come first once the Listing Grid is set to order by menu order.
 
 The card layout is the JetEngine listing **Product card** (*JetEngine → Listings*), built in Elementor with JetEngine's Dynamic Image, Dynamic Field, Dynamic Terms and Dynamic Link widgets. Its styling is in the plugin's `assets/css/products.css`, which reads the Global Colors and Fonts.
 
-The products' own pages (**View details**) currently use Hello Elementor's default single layout: title and content inside the site header and footer. A designed product page would be an Elementor Pro **Single** template for Products.
+### Product page (View details)
+Every Product's own page uses one layout: the Theme Builder template **Product page** (*Templates → Theme Builder → Single*), shown on all Products. Change it once in Elementor and every product page follows. It's built in the same style as the Soils page. Sections, top to bottom:
+- **Intro (green):** breadcrumbs (Home / Landscape supplies / Soils / … / the product), the **Card photo**, the product name, its *Short description*, "Best for: …", the *Sold as* pills, and **Get a delivered price** / **How much do I need?** buttons.
+- **About this product:** the product's main editor content, beside an **Ordering** card (delivery, trailer loading, hours, address, **Get a price** and call buttons).
+- **Not sure how much to order?:** the same terracotta band as the category pages.
+- **More from this range:** a JetEngine Listing Grid of up to four other Products from the same product category, using the **Product card** listing. Without JetEngine it shows links to the landscape supplies categories instead.
+
+The name, photo, short description and "Best for" come from Elementor Pro's Post Title, Featured Image and ACF dynamic tags. The breadcrumbs and pills are the shortcodes `[bs_product_crumbs]` and `[bs_product_sold_as]`.
+
+New products get a starting write-up with four headings (What's in it, How to use it, How much you'll need, Good for). Text in **[square brackets]** needs the yard's real details. Products made by an earlier version keep their one-line write-up until it's edited.
 
 ### Changing section backgrounds
 Each section is a top-level container whose background is a **Global Color**. To change one section, select it and go to **Style → Background**, then pick another global colour (or a custom one). To change a colour everywhere, go to **Site Settings → Global Colors**.
@@ -132,12 +144,16 @@ These are the parts I couldn't test without a live WordPress site and the licens
 - **JetEngine Listing Grid** on the Soils page: check it uses the **Product card** listing, and that its **Posts Query** has a *Tax Query* on **Product categories** → slug → `soils`. Set the order (e.g. by menu order, ascending) under the same Posts Query.
 - **Product card listing**: open it once in Elementor to check that each dynamic widget points at the right field: title, *Short description*, *Best for*, *Sold as* terms and permalink.
 - **Gravity Forms look**: the form is embedded with `theme="gravity-theme"` (Gravity Forms 2.5+).
+- **Product page**: open a product's **View details** page and check that:
+  - the photo, name, short description and "Best for" line all show. If the short description or "Best for" is blank, open the template in Elementor, then reselect the field in that widget's dynamic tag (ACF Field → *Short description* / *Best for*).
+  - "More from this range" lists other products from the same category, and not the product itself. Its Listing Grid's **Posts Query** has a *Tax Query* on Product categories using the macro `%current_terms|bs_product_cat%` (Term ID), and **Posts & Author Parameters → Exclude posts** set to `%current_id%`.
 
 ## Still needed from the client
 - **Photos.** These spots still need real photos:
   - The hero photo (product bays at the yard) and the delivery photo (loader filling a truck). Set each as the background image of that panel.
   - One photo per landscape supplies category and sub-category. Set it as the page's featured image, and swap it into the homepage card's Image widget.
-  - Soils page: the intro photo (soil bays or a scoop of garden mix). Each soil Product also needs its own photo, set as its **Card photo**.
+  - Soils page: the intro photo (soil bays or a scoop of garden mix). Each soil Product also needs its own photo, set as its **Card photo**. The same photo shows large on the product's own page, so a landscape photo at least 1200px wide works best.
+- **Product write-ups.** Each product page's "About this product" text: what's in it, how to use it and roughly how much to order.
 - **About page.** The founder's name, the year the yard started and what it first sold, the year of the first Bali trip, and a line about the team today. Plus photos:
   - the owners or team at the yard (intro)
   - the yard in the early days (Our story)
