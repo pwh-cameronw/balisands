@@ -224,19 +224,48 @@
 /*
  * Landscape supplies mega menu (JetMenu mega content, layout-mega-menu.php).
  * Same panel look as the dropdowns. On desktop it is --bs-mega-width wide and
- * lines up with the right-hand end of the menu, so it opens under the menu
- * and stays inside the header's width.
+ * hangs from the header's content box (the boxed header bar), right-aligned
+ * with the "Get a quote" button, so it always stays inside the header's width.
+ * JetMenu would otherwise position it from the menu item.
  */
 .bs-main-menu {
 	--bs-mega-width: 920px;
 }
 
 @media (min-width: 1025px) {
+	/* Everything between the panel and the header bar's content box stops being its anchor… */
+	.bs-header .e-con:has(.bs-main-menu),
+	.bs-header .bs-main-menu,
+	.bs-main-menu > .elementor-widget-container,
+	.bs-main-menu .jet-mega-menu,
+	.bs-main-menu .jet-mega-menu-container,
+	.bs-main-menu .jet-mega-menu-list,
+	.bs-main-menu .jet-mega-menu-item--top-level {
+		position: static !important;
+	}
+
+	/* …so the boxed content area is. */
+	.bs-header .e-con-inner:has(.bs-main-menu) {
+		position: relative;
+	}
+
 	.bs-main-menu .jet-mega-menu-mega-container {
 		width: min(var(--bs-mega-width), calc(100vw - 32px)) !important;
 		max-width: none !important;
+		top: 100% !important;
 		left: auto !important;
 		right: 0 !important;
+		transform: none !important;
+	}
+
+	/* An invisible strip above the panel, so the pointer can move from the menu item to the panel without it closing. */
+	.bs-main-menu .jet-mega-menu-mega-container::before {
+		content: "";
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 100%;
+		height: 32px;
 	}
 }
 

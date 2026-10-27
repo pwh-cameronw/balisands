@@ -139,7 +139,7 @@ In the Main menu, **Landscape supplies** has five categories under it: Sands, So
 
 - **Editing the panel:** go to **Appearance → Menus**, hover the *Landscape supplies* item, click **JetMenu**, then **Edit Mega Menu Item Content**. It opens in Elementor. Each photo, title and link list is its own widget.
 - **Adding a category or sub-category:** add it to the Main menu under the right item, so the mobile menu has it. Then add it to the mega menu content in Elementor.
-- **Panel width:** it's 920px. Change `--bs-mega-width` in the plugin's `assets/css/menu.css` to adjust it.
+- **Panel size and position:** it's 920px wide. It opens just under the white header bar, with its right edge in line with **Get a quote**, so it always stays inside the header's width. Change `--bs-mega-width` in the plugin's `assets/css/menu.css` to adjust the width.
 - **Mobile, and without JetMenu:** Landscape supplies shows as an ordinary nested menu (category › sub-categories) from the Main menu's items.
 
 Running setup with **Rebuild the main menu** ticked rebuilds the menu items and the mega menu content.
@@ -157,7 +157,7 @@ These are the parts I couldn't test without a live WordPress site and the licens
 
 - **JetMenu dropdown styling.** The plugin's CSS targets JetMenu's class names (`.jet-mega-menu-*`) to give the dropdown its rounded green-bordered panel. If a JetMenu update renames them, set the panel style in the Mega Menu widget's **Style** tab instead. The images still show either way.
 - **JetMenu widget's menu**: in the header, check the Mega Menu widget has **Main menu** selected.
-- **Mega menu**: hover *Landscape supplies*. The five-column panel should open under the menu, lined up with its right-hand end. If you see an ordinary dropdown instead, open **Appearance → Menus**, click **JetMenu** on the *Landscape supplies* item, and check **Mega Submenu Enabled** is on and its content is "Mega menu: Landscape supplies". If the panel opens too narrow or in the wrong place, set its width and position in that item's JetMenu settings, or in the Mega Menu widget's **Style** tab.
+- **Mega menu**: hover *Landscape supplies*. The five-column panel should open just under the header bar, with its right edge in line with **Get a quote**. If you see an ordinary dropdown instead, open **Appearance → Menus**, click **JetMenu** on the *Landscape supplies* item, and check **Mega Submenu Enabled** is on and its content is "Mega menu: Landscape supplies". If the panel opens too narrow or in the wrong place, set its width and position in that item's JetMenu settings, or in the Mega Menu widget's **Style** tab.
 - **Mobile menu**: check Landscape supplies opens to the five categories and their sub-categories.
 - **JetEngine Listing Grid** on the Soils page: check it uses the **Product card** listing, and that its **Posts Query** has a *Tax Query* on **Product categories** → slug → `soils`. Set the order (e.g. by menu order, ascending) under the same Posts Query.
 - **Product card listing**: open it once in Elementor to check that each dynamic widget points at the right field: title, *Short description*, *Best for*, *Sold as* terms and permalink.
