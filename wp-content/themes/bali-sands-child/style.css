@@ -1,0 +1,66 @@
+/*
+Theme Name:   Bali Sands (Hello Elementor child)
+Theme URI:    https://balisands.com.au/
+Description:  Child theme of Hello Elementor for Bali Sands. Layout, colours and fonts live in Elementor (Site Settings → Global Colors / Global Fonts); this theme only adds small resets and Gravity Forms styling that reads those globals.
+Author:       Bali Sands
+Template:     hello-elementor
+Version:      1.2.1
+Requires at least: 6.3
+Requires PHP: 7.4
+License:      GNU General Public License v3 or later
+License URI:  https://www.gnu.org/licenses/gpl-3.0.html
+Text Domain:  bali-sands-child
+*/
+
+/* Elementor text widgets: no trailing gap under the last paragraph. */
+.elementor-widget-text-editor p:last-child {
+	margin-bottom: 0;
+}
+
+/* Linked category cards (homepage): lift on hover. */
+.bs-card {
+	transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+.bs-card:hover {
+	border-color: var(--e-global-color-primary, #2F4034) !important;
+	box-shadow: 0 10px 24px rgba(32, 28, 23, .10);
+	transform: translateY(-2px);
+}
+a.bs-card,
+a.bs-card:hover {
+	color: inherit;
+	text-decoration: none;
+}
+
+/* Breadcrumbs on dark intros: links in the label colour, current page in white. */
+.bs-on-dark .elementor-widget-text-editor.bs-crumbs a {
+	color: inherit;
+	text-decoration: none;
+}
+.bs-on-dark .elementor-widget-text-editor.bs-crumbs a:hover {
+	color: var(--e-global-color-bs_white, #FFFFFF);
+}
+.bs-crumbs strong {
+	color: var(--e-global-color-bs_white, #FFFFFF);
+}
+
+/* Google Maps widget with rounded corners (CSS class "bs-map"). */
+.bs-map .elementor-custom-embed,
+.bs-map iframe {
+	display: block;
+	border-radius: 14px;
+	overflow: hidden;
+}
+
+/* Text links inside dark sections (CSS class "bs-on-dark" on the section). */
+.bs-on-dark .elementor-widget-text-editor a {
+	color: var(--e-global-color-bs_white, #FFFFFF);
+}
+
+/*
+ * Empty photo panels (hero, delivery): a sand gradient until a background image
+ * is set in Elementor (Elementor's own, more specific rule then replaces it).
+ */
+.bs-photo-slot {
+	background-image: linear-gradient(150deg, #E9D3A6, #B9935E);
+}

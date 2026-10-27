@@ -1,0 +1,243 @@
+/*
+ * Bali Sands main menu (design 6a).
+ *
+ * 1. Menu images: the thumbnail + label + description rows added by
+ *    includes/menu-thumbnails.php. Works in any menu.
+ * 2. Dropdown panel defaults for the JetMenu "Mega Menu" widget that has the
+ *    CSS class "bs-main-menu" (set by the setup on the header's menu widget).
+ *    Anything you set in the widget's Style tab overrides these.
+ *
+ * Colours read Elementor's Global Colors.
+ */
+
+/* 1. Menu images ---------------------------------------------------------- */
+
+.bs-has-thumb {
+	--bs-menu-thumb-size: 36px;
+	--bs-menu-thumb-radius: 7px;
+	--bs-menu-thumb-gap: 12px;
+}
+
+.bs-menu-thumb {
+	flex: none;
+	display: inline-flex;
+	width: var(--bs-menu-thumb-size);
+	height: var(--bs-menu-thumb-size);
+	margin-right: var(--bs-menu-thumb-gap);
+	overflow: hidden;
+	border-radius: var(--bs-menu-thumb-radius);
+	background: var(--e-global-color-bs_photo, #E2D6BF);
+	vertical-align: middle;
+}
+
+.bs-menu-thumb__img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	max-width: none;
+	object-fit: cover;
+}
+
+.bs-menu-thumb__text {
+	display: inline-flex;
+	flex-direction: column;
+	vertical-align: middle;
+	text-align: left;
+}
+
+.bs-menu-thumb__label {
+	white-space: nowrap;
+	font-weight: 700;
+	font-size: 15.5px;
+	line-height: 1.25;
+	color: var(--e-global-color-primary, #2F4034);
+}
+
+.bs-menu-thumb__desc {
+	margin-top: 2px;
+	font-weight: 400;
+	font-size: 12.5px;
+	line-height: 1.4;
+	color: var(--e-global-color-bs_muted, #6B6355);
+	white-space: nowrap;
+}
+
+/* On phones the panel can't be 400px wide, so let descriptions wrap there. */
+@media (max-width: 767px) {
+	.bs-menu-thumb__desc {
+		white-space: normal;
+	}
+}
+
+/*
+ * The description is already shown beside the image, so hide the copy that
+ * JetMenu (or a theme walker) prints under the item from the same field.
+ */
+.bs-has-thumb .jet-mega-menu-item__desc,
+.bs-has-thumb .menu-item-description,
+.bs-has-thumb .sub-menu-item-description {
+	display: none !important;
+}
+
+/* Rows: thumbnail and text side by side, whatever wraps the title. */
+.bs-has-thumb > a,
+.bs-has-thumb .jet-mega-menu-item__link,
+.bs-has-thumb .jet-mega-menu-item__title,
+.bs-has-thumb .jet-mega-menu-item__label {
+	display: flex;
+	align-items: center;
+}
+
+/* 2. JetMenu dropdown panel ---------------------------------------------- */
+
+.bs-main-menu .jet-mega-menu-item__link,
+.bs-main-menu .jet-mega-menu-item__title {
+	font-family: var(--e-global-typography-bs_nav-font-family, "Open Sans"), sans-serif;
+}
+
+/*
+ * Dropdown size and spacing. JetMenu adds its own padding to several layers of
+ * each row, so these are forced; change the custom properties to adjust:
+ *   --bs-dropdown-width    minimum panel width
+ *   --bs-dropdown-padding  space inside the panel border
+ *   --bs-dropdown-row      padding inside each row (vertical horizontal)
+ */
+.bs-main-menu {
+	--bs-dropdown-width: 400px;
+	--bs-dropdown-padding: 8px;
+	--bs-dropdown-row: 7px 10px;
+}
+
+.bs-main-menu .jet-mega-menu-sub-menu,
+.bs-main-menu .jet-mega-menu-sub-menu__list {
+	min-width: var(--bs-dropdown-width) !important;
+}
+
+.bs-main-menu .jet-mega-menu .jet-mega-menu-sub-menu,
+.bs-main-menu .jet-mega-menu-sub-menu {
+	background: var(--e-global-color-bs_white, #FFFFFF);
+	border: 2px solid var(--e-global-color-primary, #2F4034);
+	border-radius: 14px;
+	box-shadow: 0 18px 40px rgba(32, 28, 23, .16);
+	padding: var(--bs-dropdown-padding) !important;
+}
+
+.bs-main-menu .jet-mega-menu-sub-menu__list {
+	padding: 0 !important;
+	margin: 0 !important;
+	gap: 2px;
+}
+
+/* Only the link carries padding; the item and its wrapper add none. */
+.bs-main-menu .jet-mega-menu-sub-menu .jet-mega-menu-item,
+.bs-main-menu .jet-mega-menu-sub-menu .jet-mega-menu-item__inner {
+	padding: 0 !important;
+	margin: 0 !important;
+}
+
+/* Rows span the full panel width, so the hover tint does too. */
+.bs-main-menu .jet-mega-menu-sub-menu__list {
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+}
+
+.bs-main-menu .jet-mega-menu-sub-menu .jet-mega-menu-item,
+.bs-main-menu .jet-mega-menu-sub-menu .jet-mega-menu-item__inner,
+.bs-main-menu .jet-mega-menu-sub-menu .jet-mega-menu-item__link {
+	width: 100%;
+	max-width: none;
+	box-sizing: border-box;
+}
+
+.bs-main-menu .jet-mega-menu-sub-menu .jet-mega-menu-item__inner {
+	display: flex;
+}
+
+.bs-main-menu .jet-mega-menu-sub-menu .jet-mega-menu-item__link {
+	display: flex;
+	flex: 1 1 auto;
+	justify-content: flex-start;
+}
+
+.bs-main-menu .jet-mega-menu-sub-menu .jet-mega-menu-item__inner,
+.bs-main-menu .jet-mega-menu-sub-menu .jet-mega-menu-item__link {
+	border-radius: 8px;
+	background: transparent;
+}
+
+.bs-main-menu .jet-mega-menu-sub-menu .jet-mega-menu-item__link {
+	padding: var(--bs-dropdown-row) !important;
+}
+
+.bs-main-menu .jet-mega-menu-sub-menu .jet-mega-menu-item__title,
+.bs-main-menu .jet-mega-menu-sub-menu .jet-mega-menu-item__label {
+	padding: 0 !important;
+	margin: 0 !important;
+}
+
+.bs-main-menu .jet-mega-menu-sub-menu .jet-mega-menu-item:hover > .jet-mega-menu-item__inner,
+.bs-main-menu .jet-mega-menu-sub-menu .jet-mega-menu-item:hover > .jet-mega-menu-item__inner > .jet-mega-menu-item__link,
+.bs-main-menu .jet-mega-menu-sub-menu .jet-mega-menu-item.jet-mega-menu-item--hover > .jet-mega-menu-item__inner {
+	background: var(--e-global-color-bs_green_tint, #EEF4EA);
+}
+
+/*
+ * Current section: the top-level item for the page you're on (or its parent)
+ * is green with an underline, e.g. "Soils" on the Soils page.
+ */
+.bs-main-menu .jet-mega-menu-item--top-level.current-menu-item > .jet-mega-menu-item__inner > .jet-mega-menu-item__link,
+.bs-main-menu .jet-mega-menu-item--top-level.current-menu-ancestor > .jet-mega-menu-item__inner > .jet-mega-menu-item__link,
+.bs-main-menu .jet-mega-menu-item--top-level.current-menu-parent > .jet-mega-menu-item__inner > .jet-mega-menu-item__link,
+.bs-main-menu .elementor-nav-menu--main > ul > li.current-menu-item > a,
+.bs-main-menu .elementor-nav-menu--main > ul > li.current-menu-ancestor > a {
+	color: var(--e-global-color-primary, #2F4034);
+	box-shadow: inset 0 -2px 0 var(--e-global-color-primary, #2F4034);
+}
+
+/* "See all …" link at the foot of each dropdown. */
+.bs-main-menu .jet-mega-menu-sub-menu .bs-see-all,
+.bs-main-menu .bs-see-all {
+	margin: 6px 0 0 !important;
+	padding-top: 2px !important;
+	border-top: 1px solid var(--e-global-color-bs_line, #ECE6DA);
+}
+
+.bs-main-menu .jet-mega-menu-sub-menu .bs-see-all .jet-mega-menu-item__link,
+.bs-main-menu .bs-see-all > a {
+	padding: 10px 6px 4px !important;
+	font-weight: 700;
+	font-size: 13.5px;
+	color: var(--e-global-color-primary, #2F4034);
+}
+
+.bs-main-menu .bs-see-all:hover > .jet-mega-menu-item__inner,
+.bs-main-menu .bs-see-all:hover .jet-mega-menu-item__link {
+	background: transparent;
+}
+
+.bs-main-menu .bs-see-all .jet-mega-menu-item__label::after,
+.bs-main-menu .bs-see-all > a::after {
+	content: " →";
+}
+
+/* Same panel look for Elementor Pro's Nav Menu if it is used instead of JetMenu. */
+.bs-main-menu .elementor-nav-menu--main .sub-menu {
+	min-width: var(--bs-dropdown-width) !important;
+	padding: var(--bs-dropdown-padding);
+	background: var(--e-global-color-bs_white, #FFFFFF);
+	border: 2px solid var(--e-global-color-primary, #2F4034);
+	border-radius: 14px;
+	box-shadow: 0 18px 40px rgba(32, 28, 23, .16);
+}
+
+.bs-main-menu .elementor-nav-menu--main .sub-menu a {
+	width: 100%;
+	box-sizing: border-box;
+	border-radius: 8px;
+	padding: var(--bs-dropdown-row) !important;
+}
+
+.bs-main-menu .elementor-nav-menu--main .sub-menu a:hover {
+	background: var(--e-global-color-bs_green_tint, #EEF4EA);
+}

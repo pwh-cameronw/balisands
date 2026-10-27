@@ -1,0 +1,85 @@
+/* [bs_calculator] — colours and fonts read Elementor's globals. */
+
+.bs-calc {
+	font-family: var(--e-global-typography-text-font-family, "Open Sans"), sans-serif;
+	color: var(--e-global-color-bs_ink, #201C17);
+}
+
+.bs-calc__fields {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 12px;
+}
+
+.bs-calc__field {
+	display: flex;
+	flex-direction: column;
+	gap: 7px;
+	margin: 0;
+}
+
+.bs-calc__label {
+	font-weight: 600;
+	font-size: 12.5px;
+	line-height: 1;
+	color: var(--e-global-color-text, #4D463B);
+}
+
+.bs-calc .bs-calc__input {
+	width: 100%;
+	box-sizing: border-box;
+	border: 1.5px solid var(--e-global-color-bs_field, #D9D1C1);
+	border-radius: 6px;
+	padding: 13px;
+	background: #fff;
+	font-family: inherit;
+	font-weight: 700;
+	font-size: 18px;
+	line-height: 1;
+	color: var(--e-global-color-bs_ink, #201C17);
+	outline: none;
+}
+
+.bs-calc .bs-calc__input:focus {
+	border-color: var(--e-global-color-primary, #2F4034);
+	box-shadow: 0 0 0 3px rgba(47, 64, 52, .15);
+}
+
+.bs-calc__result {
+	display: flex;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 12px;
+	margin-top: 22px;
+	padding-top: 18px;
+	border-top: 1px solid var(--e-global-color-bs_line, #ECE6DA);
+}
+
+.bs-calc__result-label {
+	font-weight: 600;
+	font-size: 14px;
+	line-height: 1;
+	color: var(--e-global-color-text, #4D463B);
+}
+
+.bs-calc__result-value {
+	font-family: var(--e-global-typography-bs_figure-font-family, "Open Sans"), sans-serif;
+	font-weight: var(--e-global-typography-bs_figure-font-weight, 800);
+	font-size: var(--e-global-typography-bs_figure-font-size, 36px);
+	line-height: 1;
+	color: var(--e-global-color-primary, #2F4034);
+}
+
+.bs-calc__load {
+	margin-top: 14px;
+	font-weight: 600;
+	font-size: 13.5px;
+	line-height: 1.55;
+	color: var(--e-global-color-text, #4D463B);
+}
+
+@media (max-width: 480px) {
+	.bs-calc__fields {
+		grid-template-columns: 1fr;
+	}
+}

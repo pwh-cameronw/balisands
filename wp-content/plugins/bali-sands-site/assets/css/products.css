@@ -1,0 +1,165 @@
+/*
+ * Product cards (.bs-product): the JetEngine "Product card" listing and the
+ * fallback cards share these classes. Colours and fonts read Elementor's
+ * Global Colors and Global Fonts.
+ */
+
+/* Card fills its grid cell; body grows; buttons sit at the bottom. ------- */
+
+.jet-listing-grid__item > .elementor,
+.jet-listing-grid__item > .elementor > .e-con,
+.jet-listing-grid__item .bs-product {
+	height: 100%;
+}
+
+.bs-product {
+	display: flex !important;
+	flex-direction: column !important;
+}
+
+.bs-product__body {
+	flex: 1 1 auto !important;
+	--flex-grow: 1;
+}
+
+.bs-product__actions {
+	margin-top: auto !important;
+	--margin-top: auto;
+	flex-wrap: nowrap !important;
+}
+
+/* Two equal, full-width buttons. */
+.bs-product__actions > .elementor-element {
+	flex: 1 1 0 !important;
+	width: auto !important;
+	min-width: 0;
+}
+
+.bs-product__actions .elementor-button,
+.bs-product__actions .jet-listing-dynamic-link__link {
+	display: flex !important;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+/* "View details" (JetEngine Dynamic Link) styled as the green button. */
+.bs-product__details .jet-listing-dynamic-link__link {
+	padding: 13px 8px;
+	border-radius: 6px;
+	background: var(--e-global-color-primary, #2F4034);
+	color: var(--e-global-color-bs_white, #FFFFFF);
+	font-family: var(--e-global-typography-bs_button_sm-font-family, "Open Sans"), sans-serif;
+	font-weight: var(--e-global-typography-bs_button_sm-font-weight, 700);
+	font-size: var(--e-global-typography-bs_button_sm-font-size, 13.5px);
+	line-height: 1;
+	text-decoration: none;
+	transition: background-color .2s ease;
+}
+
+.bs-product__details .jet-listing-dynamic-link__link:hover {
+	background: var(--e-global-color-bs_green_hover, #24332A);
+	color: var(--e-global-color-bs_white, #FFFFFF);
+}
+
+/* Photo: fixed height, cropped to fill. ---------------------------------- */
+
+.bs-product__photo,
+.bs-product__photo .jet-listing-dynamic-image,
+.bs-product__photo a {
+	display: block;
+	width: 100%;
+	margin: 0;
+}
+
+.bs-product__photo img {
+	display: block;
+	width: 100%;
+	height: 215px;
+	max-width: none;
+	object-fit: cover;
+	border-radius: 0;
+}
+
+@media (max-width: 1024px) {
+	.bs-product__photo img {
+		height: 260px;
+	}
+}
+
+@media (max-width: 767px) {
+	.bs-product__photo img {
+		height: 220px;
+	}
+}
+
+/* Text (JetEngine Dynamic Fields). --------------------------------------- */
+
+.bs-product__name .jet-listing-dynamic-field__content,
+.bs-product__name .jet-listing-dynamic-field__content a {
+	margin: 0;
+	font-family: var(--e-global-typography-bs_card_lg-font-family, "Open Sans"), sans-serif;
+	font-weight: var(--e-global-typography-bs_card_lg-font-weight, 700);
+	font-size: var(--e-global-typography-bs_card_lg-font-size, 18px);
+	line-height: var(--e-global-typography-bs_card_lg-line-height, 1.3);
+	color: var(--e-global-color-bs_ink, #201C17);
+}
+
+.bs-product__desc .jet-listing-dynamic-field__content {
+	margin: 0;
+	font-family: var(--e-global-typography-bs_card_text-font-family, "Open Sans"), sans-serif;
+	font-weight: var(--e-global-typography-bs_card_text-font-weight, 400);
+	font-size: var(--e-global-typography-bs_card_text-font-size, 14px);
+	line-height: var(--e-global-typography-bs_card_text-line-height, 1.6);
+	color: var(--e-global-color-text, #4D463B);
+}
+
+.bs-product__best-value .jet-listing-dynamic-field__content {
+	margin: 0;
+	font-family: var(--e-global-typography-bs_meta-font-family, "Open Sans"), sans-serif;
+	font-weight: var(--e-global-typography-bs_meta-font-weight, 600);
+	font-size: var(--e-global-typography-bs_meta-font-size, 13px);
+	line-height: var(--e-global-typography-bs_meta-line-height, 1.45);
+	color: var(--e-global-color-secondary, #8A5A3B);
+}
+
+.bs-product .jet-listing-dynamic-field {
+	display: block;
+}
+
+/* "Sold as" pills (JetEngine Dynamic Terms, or the fallback .bs-pill). -- */
+
+.bs-product__pills {
+	margin-top: 4px;
+}
+
+.bs-product__pills .jet-listing-dynamic-terms {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+
+.bs-product__pills .jet-listing-dynamic-terms__link,
+.bs-product__pills .bs-pill .elementor-heading-title {
+	display: inline-block;
+	padding: 7px 9px;
+	border-radius: 100px;
+	background: var(--e-global-color-bs_green_tint, #EEF4EA);
+	color: var(--e-global-color-primary, #2F4034);
+	font-family: var(--e-global-typography-bs_pill-font-family, "Open Sans"), sans-serif;
+	font-weight: var(--e-global-typography-bs_pill-font-weight, 700);
+	font-size: var(--e-global-typography-bs_pill-font-size, 12px);
+	line-height: 1;
+	text-decoration: none;
+}
+
+.bs-product__pills .jet-listing-dynamic-terms__link::before,
+.bs-product__pills .bs-pill .elementor-heading-title::before {
+	content: "✓ ";
+}
+
+/* The delimiter JetEngine may print between terms. */
+.bs-product__pills .jet-listing-dynamic-terms__delimiter {
+	display: none;
+}
