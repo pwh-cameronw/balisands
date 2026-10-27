@@ -223,15 +223,11 @@
 
 /*
  * Landscape supplies mega menu (JetMenu mega content, layout-mega-menu.php).
- * Same panel look as the dropdowns. On desktop it is --bs-mega-width wide and
- * hangs from the header's content box (the boxed header bar), right-aligned
- * with the "Get a quote" button, so it always stays inside the header's width.
- * JetMenu would otherwise position it from the menu item.
+ * Same panel look as the dropdowns. On desktop it hangs from the header's
+ * content box (the boxed header bar) and spans its full width, from the logo
+ * to the "Get a quote" button. JetMenu would otherwise position it from the
+ * menu item.
  */
-.bs-main-menu {
-	--bs-mega-width: 920px;
-}
-
 @media (min-width: 1025px) {
 	/* Everything between the panel and the header bar's content box stops being its anchor… */
 	.bs-header .e-con:has(.bs-main-menu),
@@ -250,10 +246,10 @@
 	}
 
 	.bs-main-menu .jet-mega-menu-mega-container {
-		width: min(var(--bs-mega-width), calc(100vw - 32px)) !important;
+		width: auto !important;
 		max-width: none !important;
 		top: 100% !important;
-		left: auto !important;
+		left: 0 !important;
 		right: 0 !important;
 		transform: none !important;
 	}
