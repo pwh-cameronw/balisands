@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Bali Sands Site
  * Description:       Builds the Bali Sands site on Hello Elementor: category pages, menus, Elementor global colours and fonts, the homepage, the header, footer and product page, and the Gravity Forms. Also shows each category page's featured image beside it in the menu.
- * Version:           1.3.1
+ * Version:           1.4.0
  * Requires at least: 6.3
  * Requires PHP:      7.4
  * Author:            Bali Sands
@@ -14,7 +14,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'BSS_VERSION', '1.3.1' );
+define( 'BSS_VERSION', '1.4.0' );
 define( 'BSS_FILE', __FILE__ );
 define( 'BSS_DIR', plugin_dir_path( __FILE__ ) );
 define( 'BSS_URL', plugin_dir_url( __FILE__ ) );
@@ -40,6 +40,7 @@ require_once BSS_DIR . 'includes/layout-home.php';
 require_once BSS_DIR . 'includes/layout-category.php';
 require_once BSS_DIR . 'includes/layout-about.php';
 require_once BSS_DIR . 'includes/layout-product.php';
+require_once BSS_DIR . 'includes/layout-mega-menu.php';
 require_once BSS_DIR . 'includes/layout-theme.php';
 require_once BSS_DIR . 'includes/setup.php';
 

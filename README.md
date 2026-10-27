@@ -6,7 +6,7 @@ The homepage from Claude Design **"Bali Sands Homepage" → 6a, "Homepage v3 —
 | --- | --- |
 | **Hello Elementor** (parent theme) + **Bali Sands child theme** | Theme |
 | **Elementor** + **Elementor Pro** | Homepage, header and footer (Theme Builder) |
-| **JetMenu** (Crocoblock) | Main menu with dropdowns |
+| **JetMenu** (Crocoblock) | Main menu with dropdowns and the Landscape supplies mega menu |
 | **Gravity Forms** | "Get a quote" form |
 | **JetEngine** (Crocoblock) | Product cards on the category pages (Listing Grid) |
 | **ACF** (free or Pro) | Product card fields (Short description, Best for) |
@@ -35,7 +35,8 @@ To install from WordPress's uploader, zip each folder (`bali-sands-child.zip`, `
      - **Landscape Supplies** → Sands, Soils, Stones, Mulch, Limestone Pavers & Cement, and Edging Tools & Retic. Each of these has its own sub-category pages, e.g. Sands → Paving Sand.
      - **Bali Imports** → Gazebos & Outdoor Furniture, Water Features, Bird Baths, Pots, Statues, and Handycrafts & Giftware.
      - Delivery, About and Contact.
-   - creates the **Main menu**: Sands, Soils, Stones, Mulch, Paving and Bali imports, each with a dropdown, then Delivery and Contact. It also creates the two footer menus (Landscape supplies and Bali imports).
+   - creates the **Main menu**: Landscape supplies (a mega menu), Bali imports (a dropdown), Delivery and Contact. It also creates the two footer menus (Landscape supplies and Bali imports).
+   - creates the **Landscape supplies mega menu** in JetMenu: a column each for Sands, Soils, Stones, Mulch and Paving, with the category's photo, title and sub-categories.
    - the footer's small print has "Website By:" and the Perth Web Hosting logo, linking to perthwebhosting.net.au in a new tab. The logo file ships inside the plugin (`assets/img/pwh-logo-noborder.svg`), because WordPress blocks SVG uploads to the Media Library by default.
    - sets Elementor's **Global Colors** and **Global Fonts** (Open Sans), plus default buttons, links and a 1200px content width.
    - creates the **Get a quote** Gravity form and adds it to the homepage and the Contact page.
@@ -49,7 +50,7 @@ To install from WordPress's uploader, zip each folder (`bali-sands-child.zip`, `
 
    It's safe to run again: it only adds what's missing. The homepage, category pages, About page, header, footer and product page layouts are only replaced if you tick their **Rebuild** box.
 
-   **Updating from 1.2.x:** upload the new `bali-sands-site.zip` (WordPress offers to replace the old version), then run setup again. It adds the Product page template and leaves everything else as it is.
+   **Updating an installed site:** upload the new `bali-sands-site.zip` (WordPress offers to replace the old version), then run setup again. It adds anything new (e.g. the Product page template) and leaves everything else as it is. To switch from the old menu (Sands, Soils, Stones, Mulch and Paving as separate items) to the mega menu, tick **Rebuild the main menu**. That replaces the Main menu's items, so it undoes any changes made to them in Appearance → Menus.
 
 ## How it's put together
 
@@ -133,6 +134,16 @@ The category cards on the homepage, the menu items and the footer lists all link
 2. Set its **Featured image** and its **Excerpt** (the short description).
 3. Add it to **Appearance → Menus → Main menu** under the right dropdown.
 
+### Landscape supplies mega menu
+In the Main menu, **Landscape supplies** has five categories under it: Sands, Soils, Stones, Mulch and Paving, each with its sub-categories under it. JetMenu shows them as a **mega menu**: a wide panel with a column per category. Each column has the category's photo (its page's featured image), its title, and links to its sub-categories. At the foot is a "See all landscape supplies →" link.
+
+- **Editing the panel:** go to **Appearance → Menus**, hover the *Landscape supplies* item, click **JetMenu**, then **Edit Mega Menu Item Content**. It opens in Elementor. Each photo, title and link list is its own widget.
+- **Adding a category or sub-category:** add it to the Main menu under the right item, so the mobile menu has it. Then add it to the mega menu content in Elementor.
+- **Panel width:** it's 920px. Change `--bs-mega-width` in the plugin's `assets/css/menu.css` to adjust it.
+- **Mobile, and without JetMenu:** Landscape supplies shows as an ordinary nested menu (category › sub-categories) from the Main menu's items.
+
+Running setup with **Rebuild the main menu** ticked rebuilds the menu items and the mega menu content.
+
 ### Menu images
 In the main menu, each dropdown row shows **the linked page's featured image**, its title and its menu **Description** (turn Description on under *Screen Options* in Appearance → Menus). To change an image, change the page's featured image.
 - Add the CSS class `bs-no-thumb` to a menu item to hide its image.
@@ -146,6 +157,8 @@ These are the parts I couldn't test without a live WordPress site and the licens
 
 - **JetMenu dropdown styling.** The plugin's CSS targets JetMenu's class names (`.jet-mega-menu-*`) to give the dropdown its rounded green-bordered panel. If a JetMenu update renames them, set the panel style in the Mega Menu widget's **Style** tab instead. The images still show either way.
 - **JetMenu widget's menu**: in the header, check the Mega Menu widget has **Main menu** selected.
+- **Mega menu**: hover *Landscape supplies*. The five-column panel should open under the menu, lined up with its right-hand end. If you see an ordinary dropdown instead, open **Appearance → Menus**, click **JetMenu** on the *Landscape supplies* item, and check **Mega Submenu Enabled** is on and its content is "Mega menu: Landscape supplies". If the panel opens too narrow or in the wrong place, set its width and position in that item's JetMenu settings, or in the Mega Menu widget's **Style** tab.
+- **Mobile menu**: check Landscape supplies opens to the five categories and their sub-categories.
 - **JetEngine Listing Grid** on the Soils page: check it uses the **Product card** listing, and that its **Posts Query** has a *Tax Query* on **Product categories** → slug → `soils`. Set the order (e.g. by menu order, ascending) under the same Posts Query.
 - **Product card listing**: open it once in Elementor to check that each dynamic widget points at the right field: title, *Short description*, *Best for*, *Sold as* terms and permalink.
 - **Gravity Forms look**: the form is embedded with `theme="gravity-theme"` (Gravity Forms 2.5+).

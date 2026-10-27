@@ -225,22 +225,36 @@ function bss_pages() {
 }
 
 /**
- * Main menu: [label, page key, [child page keys], "see all" label].
+ * Main menu: [label, page key, [child page keys] or "mega", "see all" label].
  *
  * Children are shown with their page's featured image and description.
+ * "mega" builds the item's sub-menu from bss_mega_menu() (a column per
+ * category, its sub-categories under it); JetMenu shows it as a mega menu.
  *
  * @return array<int,array>
  */
 function bss_main_menu() {
 	return array(
-		array( 'Sands', 'sands', array( 'sands-brickies', 'sands-paving', 'sands-white', 'sands-fill' ), 'See all sands' ),
-		array( 'Soils', 'soils', array( 'soils-garden', 'soils-topdress', 'soils-compost', 'soils-improvers' ), 'See all soils' ),
-		array( 'Stones', 'stones', array( 'stones-gravel', 'stones-pebbles', 'stones-roadbase' ), 'See all stones' ),
-		array( 'Mulch', 'mulch', array( 'mulch-pine', 'mulch-jarrah', 'mulch-black' ), 'See all mulch' ),
-		array( 'Paving', 'paving', array( 'paving-limestone', 'paving-pavers', 'paving-cement', 'edging' ), 'See paving & building' ),
+		array( 'Landscape supplies', 'supplies', 'mega', 'See all landscape supplies' ),
 		array( 'Bali imports', 'imports', array( 'imports-gazebos', 'imports-water', 'imports-birdbath', 'imports-pots', 'imports-statues', 'imports-gifts' ), 'See all Bali imports' ),
 		array( 'Delivery', 'delivery', array(), '' ),
 		array( 'Contact', 'contact', array(), '' ),
+	);
+}
+
+/**
+ * The Landscape supplies mega menu: one column per category,
+ * [column title, page key, [sub-category page keys]].
+ *
+ * @return array<int,array>
+ */
+function bss_mega_menu() {
+	return array(
+		array( 'Sands', 'sands', array( 'sands-brickies', 'sands-paving', 'sands-white', 'sands-fill' ) ),
+		array( 'Soils', 'soils', array( 'soils-garden', 'soils-topdress', 'soils-compost', 'soils-improvers' ) ),
+		array( 'Stones', 'stones', array( 'stones-gravel', 'stones-pebbles', 'stones-roadbase' ) ),
+		array( 'Mulch', 'mulch', array( 'mulch-pine', 'mulch-jarrah', 'mulch-black' ) ),
+		array( 'Paving', 'paving', array( 'paving-limestone', 'paving-pavers', 'paving-cement', 'edging' ) ),
 	);
 }
 

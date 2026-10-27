@@ -6,7 +6,8 @@
  *    placeholder swatch images for the landscape supplies categories.
  * 2. Creates the category pages (with featured images) under "Landscape
  *    Supplies" and "Bali Imports", plus Delivery, About, Contact and legal pages.
- * 3. Creates the Main menu (with dropdowns) and the footer menus.
+ * 3. Creates the Main menu (with dropdowns and the Landscape supplies mega
+ *    menu) and the footer menus.
  * 4. Sets Elementor's Global Colors, Global Fonts, buttons and content width.
  * 5. Creates the Gravity Forms quote form.
  * 6. Creates the Home page in Elementor and sets it as the front page.
@@ -138,6 +139,7 @@ function bss_setup_page() {
 				'rebuild_about'      => ! empty( $_POST['bss_rebuild_about'] ),
 				'rebuild_theme'      => ! empty( $_POST['bss_rebuild_theme'] ),
 				'rebuild_product'    => ! empty( $_POST['bss_rebuild_product'] ),
+				'rebuild_menu'       => ! empty( $_POST['bss_rebuild_menu'] ),
 			)
 		);
 		delete_transient( 'bss_setup_notice' );
@@ -184,6 +186,9 @@ function bss_setup_page() {
 
 		<form method="post" style="margin-top:20px">
 			<?php wp_nonce_field( 'bss_run_setup' ); ?>
+			<?php if ( get_option( 'bss_menus' ) ) : ?>
+				<p><label><input type="checkbox" name="bss_rebuild_menu" value="1"> <?php esc_html_e( 'Rebuild the main menu and the Landscape supplies mega menu (replaces any changes to the Main menu\'s items and the mega menu content)', 'bali-sands-site' ); ?></label></p>
+			<?php endif; ?>
 			<?php if ( $home_id && get_post( $home_id ) ) : ?>
 				<p><label><input type="checkbox" name="bss_rebuild_home" value="1"> <?php esc_html_e( 'Rebuild the homepage layout (replaces any Elementor edits to the homepage)', 'bali-sands-site' ); ?></label></p>
 			<?php endif; ?>
@@ -228,7 +233,7 @@ function bss_setup_page() {
 /**
  * Run every step.
  *
- * @param array $opts rebuild_home, rebuild_categories, rebuild_about, rebuild_theme, rebuild_product.
+ * @param array $opts rebuild_home, rebuild_categories, rebuild_about, rebuild_theme, rebuild_product, rebuild_menu.
  * @return string[] Log lines.
  */
 function bss_run_setup( $opts ) {
@@ -240,7 +245,7 @@ function bss_run_setup( $opts ) {
 	$log[] = bss_setup_experiments();
 	$log[] = bss_setup_media();
 	$log[] = bss_setup_pages();
-	$log[] = bss_setup_menus();
+	$log[] = bss_setup_menus( ! empty( $opts['rebuild_menu'] ) );
 	$log[] = bss_setup_kit();
 
 	$form  = bss_setup_quote_form();
@@ -252,6 +257,7 @@ function bss_run_setup( $opts ) {
 	$log[] = bss_setup_product_listing( ! empty( $opts['rebuild_categories'] ) );
 	$log[] = bss_setup_category_layouts( ! empty( $opts['rebuild_categories'] ) );
 	$log[] = bss_setup_about( ! empty( $opts['rebuild_about'] ) );
+	$log[] = bss_setup_mega_menu( ! empty( $opts['rebuild_menu'] ) );
 	$log[] = bss_setup_theme_template( 'header', 'Bali Sands header', ! empty( $opts['rebuild_theme'] ) );
 	$log[] = bss_setup_theme_template( 'footer', 'Bali Sands footer', ! empty( $opts['rebuild_theme'] ) );
 	$log[] = bss_setup_theme_template( 'product_page', 'Product page', ! empty( $opts['rebuild_product'] ) );
@@ -488,14 +494,49 @@ function bss_add_menu_page( $menu_id, $page, $label, $parent, $pos, $desc = '', 
 }
 
 /**
+ * Add the bss_main_menu() items to a menu.
+ *
+ * The mega item's sub-menu is a nested list (category › sub-categories): it is
+ * what JetMenu's mobile menu and any non-mega dropdown show.
+ *
+ * @param int $menu_id Menu id.
+ */
+function bss_fill_main_menu( $menu_id ) {
+	$pages = bss_pages();
+	$pos   = 0;
+	foreach ( bss_main_menu() as $top ) {
+		$parent = bss_add_menu_page( $menu_id, $top[1], $top[0], 0, ++$pos, '', 'mega' === $top[2] ? 'bs-mega-item' : '' );
+		if ( ! $parent ) {
+			continue;
+		}
+		if ( 'mega' === $top[2] ) {
+			foreach ( bss_mega_menu() as $column ) {
+				$col = bss_add_menu_page( $menu_id, $column[1], $column[0], $parent, ++$pos, $pages[ $column[1] ][4] );
+				foreach ( $column[2] as $child ) {
+					bss_add_menu_page( $menu_id, $child, $pages[ $child ][0], $col, ++$pos, $pages[ $child ][4] );
+				}
+			}
+		} else {
+			foreach ( $top[2] as $child ) {
+				bss_add_menu_page( $menu_id, $child, $pages[ $child ][0], $parent, ++$pos, $pages[ $child ][4] );
+			}
+		}
+		if ( $top[3] ) {
+			bss_add_menu_page( $menu_id, $top[1], $top[3], $parent, ++$pos, '', 'bs-see-all bs-no-thumb' );
+		}
+	}
+}
+
+/**
  * Create the Main menu and footer menus (once each).
  *
+ * @param bool $rebuild_main Replace the Main menu's items (the menu itself, and so
+ *                           the header's link to it, is kept).
  * @return string
  */
-function bss_setup_menus() {
+function bss_setup_menus( $rebuild_main = false ) {
 	$menus   = (array) get_option( 'bss_menus', array() );
 	$created = array();
-	$pages   = bss_pages();
 
 	if ( empty( $menus['main'] ) || ! wp_get_nav_menu_object( $menus['main'] ) ) {
 		$existing = wp_get_nav_menu_object( 'Main menu' );
@@ -504,23 +545,20 @@ function bss_setup_menus() {
 		} else {
 			$menu_id = wp_create_nav_menu( 'Main menu' );
 			if ( ! is_wp_error( $menu_id ) ) {
-				$pos = 0;
-				foreach ( bss_main_menu() as $top ) {
-					$parent = bss_add_menu_page( $menu_id, $top[1], $top[0], 0, ++$pos );
-					if ( ! $parent ) {
-						continue;
-					}
-					foreach ( $top[2] as $child ) {
-						bss_add_menu_page( $menu_id, $child, $pages[ $child ][0], $parent, ++$pos, $pages[ $child ][4] );
-					}
-					if ( $top[3] ) {
-						bss_add_menu_page( $menu_id, $top[1], $top[3], $parent, ++$pos, '', 'bs-see-all bs-no-thumb' );
-					}
-				}
+				bss_fill_main_menu( $menu_id );
 				$menus['main'] = (int) $menu_id;
 				$created[]     = 'Main menu';
+				$rebuild_main  = false;
 			}
 		}
+	}
+
+	if ( $rebuild_main && ! empty( $menus['main'] ) ) {
+		foreach ( (array) wp_get_nav_menu_items( $menus['main'], array( 'post_status' => 'any' ) ) as $item ) {
+			wp_delete_post( $item->ID, true );
+		}
+		bss_fill_main_menu( $menus['main'] );
+		$created[] = 'Main menu (rebuilt)';
 	}
 
 	foreach ( bss_footer_menus() as $name => $items ) {
@@ -1104,6 +1142,66 @@ function bss_setup_category_layouts( $rebuild ) {
 	return $done
 		? 'Category pages built in Elementor: ' . implode( ', ', $done ) . '.'
 		: 'Category pages: layouts already built, left as they are.';
+}
+
+/**
+ * The Landscape supplies mega menu: a JetMenu menu content post built in
+ * Elementor, attached to the Main menu's "Landscape supplies" item.
+ *
+ * @param bool $rebuild Overwrite its layout.
+ * @return string
+ */
+function bss_setup_mega_menu( $rebuild ) {
+	if ( ! class_exists( 'Jet_Menu' ) ) {
+		return 'Mega menu skipped: JetMenu is not active, so Landscape supplies shows as an ordinary dropdown (each category with its sub-categories).';
+	}
+	if ( ! did_action( 'elementor/loaded' ) ) {
+		return '';
+	}
+
+	$menus   = (array) get_option( 'bss_menus', array() );
+	$page_id = bss_page_id( 'supplies' );
+	$item_id = 0;
+	if ( ! empty( $menus['main'] ) && $page_id ) {
+		foreach ( (array) wp_get_nav_menu_items( $menus['main'] ) as $item ) {
+			if ( ! $item->menu_item_parent && 'page' === $item->object && (int) $item->object_id === $page_id ) {
+				$item_id = (int) $item->ID;
+				break;
+			}
+		}
+	}
+	if ( ! $item_id ) {
+		return 'Mega menu skipped: the Main menu has no top-level "Landscape supplies" item. Tick "Rebuild the main menu" and run setup again.';
+	}
+
+	$id     = (int) get_option( 'bss_mega_supplies_id' );
+	$exists = $id && get_post( $id );
+	if ( ! $exists ) {
+		$id = wp_insert_post(
+			array(
+				'post_type'   => 'jet-menu',
+				'post_status' => 'publish',
+				'post_title'  => 'Mega menu: Landscape supplies',
+			)
+		);
+		if ( is_wp_error( $id ) || ! $id ) {
+			return 'Mega menu could not be created.';
+		}
+		update_option( 'bss_mega_supplies_id', $id, false );
+	}
+	if ( ! $exists || $rebuild ) {
+		bss_save_elementor( $id, bss_mega_supplies_elements(), 'wp-post' );
+	}
+
+	// JetMenu keeps the content post's id and the item's mega settings in the menu item's meta.
+	update_post_meta( $item_id, 'jet-menu-item', $id );
+	$settings            = get_post_meta( $item_id, 'jet_menu_settings', true );
+	$settings            = is_array( $settings ) ? $settings : array();
+	$settings['enabled'] = 'true';
+	update_post_meta( $item_id, 'jet_menu_settings', $settings );
+
+	$state = $exists ? ( $rebuild ? 'rebuilt' : 'already exists, layout left as it is' ) : 'created';
+	return sprintf( 'Mega menu: %s, on the Main menu\'s "Landscape supplies" item (Appearance → Menus → that item → JetMenu → Edit Mega Menu Item Content).', $state );
 }
 
 /**

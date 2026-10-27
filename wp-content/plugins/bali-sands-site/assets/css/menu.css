@@ -221,6 +221,50 @@
 	content: " →";
 }
 
+/*
+ * Landscape supplies mega menu (JetMenu mega content, layout-mega-menu.php).
+ * Same panel look as the dropdowns. On desktop it is --bs-mega-width wide and
+ * lines up with the right-hand end of the menu, so it opens under the menu
+ * and stays inside the header's width.
+ */
+.bs-main-menu {
+	--bs-mega-width: 920px;
+}
+
+@media (min-width: 1025px) {
+	.bs-main-menu .jet-mega-menu-mega-container {
+		width: min(var(--bs-mega-width), calc(100vw - 32px)) !important;
+		max-width: none !important;
+		left: auto !important;
+		right: 0 !important;
+	}
+}
+
+.bs-main-menu .jet-mega-menu-mega-container__inner {
+	padding: 0 !important;
+	background: var(--e-global-color-bs_white, #FFFFFF);
+	border: 2px solid var(--e-global-color-primary, #2F4034);
+	border-radius: 14px;
+	box-shadow: 0 18px 40px rgba(32, 28, 23, .16);
+	overflow: hidden;
+}
+
+/* Column photos: cropped to fill, and the same lift as the cards on hover. */
+.bs-mega__image img {
+	display: block;
+	width: 100%;
+	object-fit: cover;
+	transition: opacity .2s ease;
+}
+
+.bs-mega__image a:hover img {
+	opacity: .85;
+}
+
+.bs-mega .elementor-icon-list-item a {
+	text-decoration: none;
+}
+
 /* Same panel look for Elementor Pro's Nav Menu if it is used instead of JetMenu. */
 .bs-main-menu .elementor-nav-menu--main .sub-menu {
 	min-width: var(--bs-dropdown-width) !important;
