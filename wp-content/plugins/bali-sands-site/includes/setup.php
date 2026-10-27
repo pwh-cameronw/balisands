@@ -528,6 +528,68 @@ function bss_fill_main_menu( $menu_id ) {
 }
 
 /**
+ * Add any plain top-level links from bss_main_menu() (e.g. "About us") that an
+ * existing Main menu doesn't have yet, in their place; other items are left alone.
+ *
+ * @param int $menu_id Menu id.
+ * @return string[] Labels added.
+ */
+function bss_add_missing_menu_links( $menu_id ) {
+	$rows  = bss_main_menu();
+	$added = array();
+
+	foreach ( $rows as $i => $row ) {
+		if ( ! is_array( $row[2] ) || $row[2] || $row[3] ) {
+			continue; // Only plain links, not dropdowns.
+		}
+		$page = bss_page_id( $row[1] );
+		if ( ! $page ) {
+			continue;
+		}
+
+		$items = (array) wp_get_nav_menu_items( $menu_id, array( 'post_status' => 'any' ) );
+		$top   = array();
+		foreach ( $items as $item ) {
+			if ( ! $item->menu_item_parent && 'page' === $item->object ) {
+				$top[ (int) $item->object_id ] = $item;
+			}
+		}
+		if ( isset( $top[ $page ] ) ) {
+			continue;
+		}
+
+		// Before the next item from bss_main_menu() that's in the menu, otherwise at the end.
+		$pos = 0;
+		for ( $j = $i + 1, $n = count( $rows ); $j < $n; $j++ ) {
+			$next = bss_page_id( $rows[ $j ][1] );
+			if ( $next && isset( $top[ $next ] ) ) {
+				$pos = (int) $top[ $next ]->menu_order;
+				break;
+			}
+		}
+		if ( $pos ) {
+			foreach ( $items as $item ) {
+				if ( (int) $item->menu_order >= $pos ) {
+					wp_update_post(
+						array(
+							'ID'         => $item->ID,
+							'menu_order' => (int) $item->menu_order + 1,
+						)
+					);
+				}
+			}
+		} else {
+			$pos = count( $items ) + 1;
+		}
+
+		if ( bss_add_menu_page( $menu_id, $row[1], $row[0], 0, $pos ) ) {
+			$added[] = '"' . $row[0] . '"';
+		}
+	}
+	return $added;
+}
+
+/**
  * Create the Main menu and footer menus (once each).
  *
  * @param bool $rebuild_main Replace the Main menu's items (the menu itself, and so
@@ -559,6 +621,11 @@ function bss_setup_menus( $rebuild_main = false ) {
 		}
 		bss_fill_main_menu( $menus['main'] );
 		$created[] = 'Main menu (rebuilt)';
+	} elseif ( ! empty( $menus['main'] ) && empty( $created ) ) {
+		$added = bss_add_missing_menu_links( $menus['main'] );
+		if ( $added ) {
+			$created[] = 'Main menu: added ' . implode( ', ', $added );
+		}
 	}
 
 	foreach ( bss_footer_menus() as $name => $items ) {

@@ -238,6 +238,7 @@ function bss_main_menu() {
 		array( 'Landscape supplies', 'supplies', 'mega', 'See all landscape supplies' ),
 		array( 'Bali imports', 'imports', array( 'imports-gazebos', 'imports-water', 'imports-birdbath', 'imports-pots', 'imports-statues', 'imports-gifts' ), 'See all Bali imports' ),
 		array( 'Delivery', 'delivery', array(), '' ),
+		array( 'About us', 'about', array(), '' ),
 		array( 'Contact', 'contact', array(), '' ),
 	);
 }

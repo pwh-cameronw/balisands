@@ -35,7 +35,7 @@ To install from WordPress's uploader, zip each folder (`bali-sands-child.zip`, `
      - **Landscape Supplies** → Sands, Soils, Stones, Mulch, Limestone Pavers & Cement, and Edging Tools & Retic. Each of these has its own sub-category pages, e.g. Sands → Paving Sand.
      - **Bali Imports** → Gazebos & Outdoor Furniture, Water Features, Bird Baths, Pots, Statues, and Handycrafts & Giftware.
      - Delivery, About and Contact.
-   - creates the **Main menu**: Landscape supplies (a mega menu), Bali imports (a dropdown), Delivery and Contact. It also creates the two footer menus (Landscape supplies and Bali imports).
+   - creates the **Main menu**: Landscape supplies (a mega menu), Bali imports (a dropdown), Delivery, About us and Contact. On a site that already has the Main menu, it adds any of these plain links that are missing (e.g. About us) in their place, and leaves the other items alone. It also creates the two footer menus (Landscape supplies and Bali imports).
    - creates the **Landscape supplies mega menu** in JetMenu: a column each for Sands, Soils, Stones, Mulch and Paving, with the category's photo, title and sub-categories.
    - the footer's small print has "Website By:" and the Perth Web Hosting logo, linking to perthwebhosting.net.au in a new tab. The logo file ships inside the plugin (`assets/img/pwh-logo-noborder.svg`), because WordPress blocks SVG uploads to the Media Library by default.
    - sets Elementor's **Global Colors** and **Global Fonts** (Open Sans), plus default buttons, links and a 1200px content width.
