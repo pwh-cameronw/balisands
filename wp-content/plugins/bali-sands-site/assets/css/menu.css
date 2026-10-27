@@ -246,6 +246,36 @@
 		position: relative !important;
 	}
 
+	/*
+	 * The menu fills the header bar's height, so every dropdown (and the mega
+	 * panel) opens flush with the bar's bottom edge, with no gap to cross.
+	 */
+	.bs-header .e-con:has(.bs-main-menu),
+	.bs-header .bs-main-menu {
+		align-self: stretch !important;
+	}
+
+	.bs-main-menu > .elementor-widget-container,
+	.bs-main-menu .jet-mega-menu,
+	.bs-main-menu .jet-mega-menu-container,
+	.bs-main-menu .jet-mega-menu-list {
+		height: 100%;
+	}
+
+	.bs-main-menu .jet-mega-menu-list {
+		align-items: stretch !important;
+	}
+
+	.bs-main-menu .jet-mega-menu-item--top-level {
+		display: flex !important;
+		align-items: center;
+	}
+
+	.bs-main-menu .jet-mega-menu-item--top-level > .jet-mega-menu-sub-menu {
+		top: 100% !important;
+		margin-top: 0 !important;
+	}
+
 	/* …so the boxed content area is. */
 	.bs-header .e-con-inner:has(.bs-main-menu) {
 		position: relative;
