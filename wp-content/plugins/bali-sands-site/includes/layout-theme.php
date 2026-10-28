@@ -305,8 +305,7 @@ function bss_footer_elements() {
 							'image_size'     => 'full',
 							'link_to'        => 'custom',
 							'link'           => bss_link( home_url( '/' ) ),
-							'width'          => bss_size( 150 ),
-							'width_mobile'   => bss_size( 110 ),
+							'width'          => bss_size( 90 ),
 							'align'          => 'left',
 							'_element_width' => 'auto',
 						)
