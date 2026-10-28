@@ -10,7 +10,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'BALI_SANDS_CHILD_VERSION', '1.2.1' );
+define( 'BALI_SANDS_CHILD_VERSION', '1.2.2' );
 
 add_action( 'wp_enqueue_scripts', 'bali_sands_child_styles', 20 );
 
