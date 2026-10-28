@@ -39,6 +39,7 @@ require_once BSS_DIR . 'includes/elements.php';
 require_once BSS_DIR . 'includes/layout-home.php';
 require_once BSS_DIR . 'includes/layout-category.php';
 require_once BSS_DIR . 'includes/layout-about.php';
+require_once BSS_DIR . 'includes/layout-contact.php';
 require_once BSS_DIR . 'includes/layout-theme.php';
 require_once BSS_DIR . 'includes/setup.php';
 
