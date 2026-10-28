@@ -371,6 +371,11 @@
 		position: static !important;
 	}
 
+	/*
+	 * Only the panel's position is set here. JetMenu shows and hides it (it may
+	 * collapse it rather than remove it), so its look goes on the list inside:
+	 * nothing shows under the header while the menu is closed.
+	 */
 	.bs-main-menu .jet-mega-menu-container {
 		position: absolute !important;
 		top: 100% !important;
@@ -378,20 +383,21 @@
 		right: 0 !important;
 		width: auto !important;
 		max-width: none !important;
-		max-height: calc(100vh - 120px);
-		overflow-y: auto;
 		z-index: 100;
-		box-sizing: border-box;
-		padding: 8px 16px 16px !important;
-		background: var(--e-global-color-bs_white, #FFFFFF);
-		border-top: 1px solid var(--e-global-color-bs_line, #ECE6DA);
-		box-shadow: 0 18px 40px rgba(32, 28, 23, .16);
 	}
 
 	.bs-main-menu .jet-mega-menu-list {
 		flex-direction: column;
 		align-items: stretch;
 		width: 100%;
+		max-height: calc(100vh - 120px);
+		overflow-y: auto;
+		box-sizing: border-box;
+		margin: 0 !important;
+		padding: 8px 16px 16px !important;
+		background: var(--e-global-color-bs_white, #FFFFFF);
+		border-top: 1px solid var(--e-global-color-bs_line, #ECE6DA);
+		box-shadow: 0 18px 40px rgba(32, 28, 23, .16);
 	}
 
 	.bs-main-menu .jet-mega-menu-item--top-level {
