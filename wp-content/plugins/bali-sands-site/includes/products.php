@@ -23,6 +23,7 @@ add_action( 'wp_enqueue_scripts', 'bss_product_styles' );
 add_shortcode( 'bs_product_count', 'bss_product_count_shortcode' );
 add_shortcode( 'bs_product_crumbs', 'bss_product_crumbs_shortcode' );
 add_shortcode( 'bs_product_sold_as', 'bss_product_sold_as_shortcode' );
+add_shortcode( 'bs_mega_products', 'bss_mega_products_shortcode' );
 
 /**
  * Register the post type and taxonomies.
@@ -255,4 +256,68 @@ function bss_product_sold_as_shortcode() {
 		$out .= '<span class="bs-tag">' . esc_html( $term->name ) . '</span>';
 	}
 	return '<div class="bs-tags">' . $out . '</div>';
+}
+
+/**
+ * [bs_mega_products category="soils" limit="9"] — the Products in a product
+ * category (and its sub-categories) as mega menu cards: photo and name,
+ * linking to the product page. In the same order as the category page's grid.
+ * Prints nothing when the category has no published Products.
+ *
+ * @param array $atts Shortcode attributes.
+ * @return string
+ */
+function bss_mega_products_shortcode( $atts ) {
+	$atts = shortcode_atts(
+		array(
+			'category' => '',
+			'limit'    => 9,
+		),
+		$atts,
+		'bs_mega_products'
+	);
+	if ( '' === $atts['category'] ) {
+		return '';
+	}
+	$products = get_posts(
+		array(
+			'post_type'      => 'bs_product',
+			'post_status'    => 'publish',
+			'posts_per_page' => max( 1, (int) $atts['limit'] ),
+			'orderby'        => array(
+				'menu_order' => 'ASC',
+				'date'       => 'DESC',
+			),
+			'no_found_rows'  => true,
+			'tax_query'      => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+				array(
+					'taxonomy' => 'bs_product_cat',
+					'field'    => 'slug',
+					'terms'    => sanitize_title( $atts['category'] ),
+				),
+			),
+		)
+	);
+	if ( ! $products ) {
+		return '';
+	}
+
+	$out = '';
+	foreach ( $products as $product ) {
+		$thumb = get_the_post_thumbnail(
+			$product,
+			'thumbnail',
+			array(
+				'alt'     => '',
+				'loading' => 'lazy',
+			)
+		);
+		$out  .= sprintf(
+			'<a class="bs-mega-product" href="%s"><span class="bs-mega-product__thumb">%s</span><span class="bs-mega-product__name">%s</span></a>',
+			esc_url( get_permalink( $product ) ),
+			$thumb,
+			esc_html( get_the_title( $product ) )
+		);
+	}
+	return '<div class="bs-mega-products">' . $out . '</div>';
 }

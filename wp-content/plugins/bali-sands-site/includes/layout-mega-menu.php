@@ -6,7 +6,8 @@
  * - left, on sand: a tab per category from bss_mega_menu() (thumbnail and
  *   name, linking to the category page);
  * - right: the hovered category's title, description, "See all →" and a card
- *   per sub-category (thumbnail and name).
+ *   per Product in that category (photo and name, from [bs_mega_products]),
+ *   or, while the category has no Products yet, a card per sub-category.
  *
  * Hovering or focusing a tab shows its pane (assets/js/mega-menu.js); without
  * the script the first pane shows. Images are the pages' featured images.
@@ -151,6 +152,16 @@ function bss_mega_pane( $i, $column ) {
 				)
 			),
 			bss_heading( $seed . '/desc', esc_html( $column[3] ), 'p', 'bs_card_text', 'bs_muted', bss_mt( 6 ) ),
+			// The category's Products (live, see bss_mega_products_shortcode()). When it has
+			// any, they replace the sub-category cards below (assets/css/menu.css).
+			bss_widget(
+				$seed . '/products',
+				'shortcode',
+				array(
+					'shortcode'    => '[bs_mega_products category="' . esc_attr( bss_pages()[ $column[1] ][2] ) . '"]',
+					'_css_classes' => 'bs-mega__products-widget',
+				)
+			),
 			$cards ? bss_grid( $seed . '/cards', array( 3, 2, 1 ), 12, $cards, array( 'margin' => bss_box( 18, 0, 0, 0 ), 'css_classes' => 'bs-mega__cards' ) ) : null,
 		)
 	);

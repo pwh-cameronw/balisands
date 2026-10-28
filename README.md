@@ -172,7 +172,9 @@ The category cards on the homepage, the menu items and the footer lists all link
 ### Landscape supplies mega menu
 In the Main menu, **Landscape supplies** opens a **mega menu** (JetMenu) in two panes:
 - **Left, on sand:** a tab for each category: Sands, Soils, Stones, Mulch, Limestone, pavers & cement, and Edging, tools & retic. Each tab has its page's photo and name.
-- **Right:** the category under the pointer. It shows the category's title, a one-line description, **See all →**, and a card for each sub-category with its photo.
+- **Right:** the category under the pointer. It shows the category's title, a one-line description, **See all →**, and a card for each **Product** in that category (its card photo and name, linking to the product page), in the same order as the category page's grid (up to 9).
+  - The products are live: the `[bs_mega_products category="soils"]` Shortcode widget in each pane lists them when the menu loads. A product added or reordered under **Products** shows up in the menu straight away.
+  - While a category has no products yet, its pane shows a card per **sub-category** page instead. Once you add products to it, they replace the sub-category cards automatically.
 
 Hovering or tabbing to a category switches the right pane (the plugin's `assets/js/mega-menu.js`). Clicking a tab, title or card opens that page. The photos are the pages' featured images.
 

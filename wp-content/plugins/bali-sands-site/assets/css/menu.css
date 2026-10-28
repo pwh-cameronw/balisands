@@ -364,6 +364,66 @@
 	box-shadow: 0 6px 16px rgba(32, 28, 23, .08);
 }
 
+/*
+ * Products in the pane ([bs_mega_products]): the same cards. While a category
+ * has Products, its sub-category cards are hidden; with none, the shortcode
+ * prints nothing and the sub-category cards show.
+ */
+.bs-mega-products {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 12px;
+	margin-top: 18px;
+}
+
+.bs-mega__pane:has(.bs-mega-products) .bs-mega__cards {
+	display: none !important;
+}
+
+.bs-mega .bs-mega-product {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	padding: 8px;
+	border: 1px solid var(--e-global-color-bs_line, #ECE6DA);
+	border-radius: 12px;
+	background: var(--e-global-color-bs_white, #FFFFFF);
+	color: var(--e-global-color-bs_ink, #201C17);
+	transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+.bs-mega .bs-mega-product:hover {
+	border-color: var(--e-global-color-primary, #2F4034);
+	box-shadow: 0 6px 16px rgba(32, 28, 23, .08);
+	color: var(--e-global-color-bs_ink, #201C17);
+}
+
+.bs-mega-product__thumb {
+	flex: none;
+	width: 52px;
+	height: 52px;
+	overflow: hidden;
+	border-radius: 8px;
+	background: var(--e-global-color-bs_photo, #E2D6BF);
+}
+
+.bs-mega-product__thumb img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	max-width: none;
+	object-fit: cover;
+	border-radius: 0;
+}
+
+.bs-mega-product__name {
+	min-width: 0;
+	font-family: var(--e-global-typography-bs_card-font-family, "Open Sans"), sans-serif;
+	font-weight: var(--e-global-typography-bs_card-font-weight, 700);
+	font-size: var(--e-global-typography-bs_card-font-size, 15.5px);
+	line-height: 1.25;
+}
+
 .bs-mega__cards {
 	grid-template-rows: none !important;
 	grid-auto-rows: auto !important;
