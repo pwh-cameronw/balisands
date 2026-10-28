@@ -400,17 +400,50 @@
 		box-shadow: 0 18px 40px rgba(32, 28, 23, .16);
 	}
 
+	/* Every top-level row the same height, with or without a dropdown. */
 	.bs-main-menu .jet-mega-menu-item--top-level {
+		margin: 0 !important;
+		padding: 0 !important;
+		min-height: 0 !important;
 		border-bottom: 1px solid var(--e-global-color-bs_line, #ECE6DA);
+	}
+
+	.bs-main-menu .jet-mega-menu-item--top-level > .jet-mega-menu-item__inner {
+		display: flex !important;
+		align-items: center;
+		margin: 0 !important;
+		padding: 0 !important;
+		min-height: 0 !important;
 	}
 
 	.bs-main-menu .jet-mega-menu-item--top-level > .jet-mega-menu-item__inner > .jet-mega-menu-item__link {
 		display: flex;
+		flex: 1 1 auto;
 		align-items: center;
+		margin: 0 !important;
 		padding: 14px 4px !important;
+		min-height: 0 !important;
 		font-size: 16px;
+		line-height: 1.4;
 	}
 
+	/* The dropdown arrow adds no height of its own. */
+	.bs-main-menu .jet-mega-menu-item--top-level > .jet-mega-menu-item__inner > .jet-mega-menu-item__dropdown {
+		flex: none;
+		align-self: stretch;
+		display: flex;
+		align-items: center;
+		margin: 0 !important;
+		padding: 0 8px !important;
+		min-height: 0 !important;
+	}
+
+	/* No current-section underline in the list; the label stays green. */
+	.bs-main-menu .jet-mega-menu-item--top-level > .jet-mega-menu-item__inner > .jet-mega-menu-item__link {
+		box-shadow: none !important;
+	}
+
+	.bs-main-menu .jet-mega-menu .jet-mega-menu-sub-menu,
 	.bs-main-menu .jet-mega-menu-sub-menu,
 	.bs-main-menu .jet-mega-menu-mega-container {
 		position: static !important;
@@ -418,8 +451,10 @@
 		min-width: 0 !important;
 		max-width: none !important;
 		transform: none !important;
-		margin: 0 0 10px !important;
-		padding: 0 0 0 8px !important;
+		/* No margin or padding here: JetMenu collapses this box when closed, so
+		   anything on it would still take up room. Spacing goes on the inside. */
+		margin: 0 !important;
+		padding: 0 !important;
 		border: 0 !important;
 		border-radius: 0 !important;
 		box-shadow: none !important;
@@ -427,12 +462,14 @@
 
 	.bs-main-menu .jet-mega-menu-sub-menu__list {
 		min-width: 0 !important;
+		padding: 0 0 10px 8px !important;
 	}
 
 	.bs-main-menu .jet-mega-menu-mega-container__inner {
 		border: 0;
 		border-radius: 0;
 		box-shadow: none;
+		padding: 0 0 10px !important;
 	}
 
 	.bs-main-menu .bs-menu-thumb__label,
