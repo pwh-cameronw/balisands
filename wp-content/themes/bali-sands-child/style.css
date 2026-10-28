@@ -4,7 +4,7 @@ Theme URI:    https://balisands.com.au/
 Description:  Child theme of Hello Elementor for Bali Sands. Layout, colours and fonts live in Elementor (Site Settings → Global Colors / Global Fonts); this theme only adds small resets and Gravity Forms styling that reads those globals.
 Author:       Bali Sands
 Template:     hello-elementor
-Version:      1.2.2
+Version:      1.2.3
 Requires at least: 6.3
 Requires PHP: 7.4
 License:      GNU General Public License v3 or later
@@ -66,28 +66,30 @@ a.bs-card:hover {
 }
 
 /*
- * Hero buttons ("Shop the range", "How much do I need?") side by side on
- * phones, sharing the width equally; a long label wraps inside its button.
+ * Button pairs at the top of the homepage hero, the category pages and the
+ * product pages ("Shop the range" / "Get a delivered price" and "How much do
+ * I need?") side by side on phones, sharing the width equally; a long label
+ * wraps inside its button.
  */
 @media (max-width: 767px) {
-	.bs-section--hero .e-con:has(> .elementor-widget-button + .elementor-widget-button) {
+	:is(.bs-section--hero, .bs-section--cat-intro, .bs-section--product-intro) .e-con:has(> .elementor-widget-button + .elementor-widget-button) {
 		flex-wrap: nowrap !important;
 		align-items: stretch !important;
 		gap: 10px !important;
 	}
 
-	.bs-section--hero .e-con:has(> .elementor-widget-button + .elementor-widget-button) > .elementor-widget-button {
+	:is(.bs-section--hero, .bs-section--cat-intro, .bs-section--product-intro) .e-con:has(> .elementor-widget-button + .elementor-widget-button) > .elementor-widget-button {
 		flex: 1 1 0 !important;
 		width: auto !important;
 		min-width: 0;
 	}
 
-	.bs-section--hero .e-con:has(> .elementor-widget-button + .elementor-widget-button) > .elementor-widget-button > .elementor-widget-container,
-	.bs-section--hero .e-con:has(> .elementor-widget-button + .elementor-widget-button) .elementor-button-wrapper {
+	:is(.bs-section--hero, .bs-section--cat-intro, .bs-section--product-intro) .e-con:has(> .elementor-widget-button + .elementor-widget-button) > .elementor-widget-button > .elementor-widget-container,
+	:is(.bs-section--hero, .bs-section--cat-intro, .bs-section--product-intro) .e-con:has(> .elementor-widget-button + .elementor-widget-button) .elementor-button-wrapper {
 		height: 100%;
 	}
 
-	.bs-section--hero .e-con:has(> .elementor-widget-button + .elementor-widget-button) .elementor-button {
+	:is(.bs-section--hero, .bs-section--cat-intro, .bs-section--product-intro) .e-con:has(> .elementor-widget-button + .elementor-widget-button) .elementor-button {
 		display: flex;
 		align-items: center;
 		justify-content: center;

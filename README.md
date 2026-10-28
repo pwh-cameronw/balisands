@@ -59,7 +59,7 @@ Every heading, paragraph, image, button and card is its own Elementor widget, in
 
 Sections, top to bottom: Hero → Landscape supplies → Bali imports → Calculator → Delivery → Why people come back → Reviews → Get a quote.
 
-On phones, the hero's two buttons sit side by side and share the width. That's a rule in the child theme's `style.css`, so it applies without rebuilding the homepage.
+On phones, the hero's two buttons sit side by side and share the width. So do the pairs at the top of the category pages and product pages. That's a rule in the child theme's `style.css`, so it applies without rebuilding any page.
 
 ### Category pages (design 7a)
 The **Soils** page is built in Elementor from design 7a. Its sections, top to bottom:
