@@ -39,12 +39,13 @@ To install from WordPress's uploader, zip each folder (`bali-sands-child.zip`, `
    - creates the **Landscape supplies mega menu** in JetMenu: a column each for Sands, Soils, Stones, Mulch and Paving, with the category's photo, title and sub-categories.
    - the footer's small print has "Website By:" and the Perth Web Hosting logo, linking to perthwebhosting.net.au in a new tab. The logo file ships inside the plugin (`assets/img/pwh-logo-noborder.svg`), because WordPress blocks SVG uploads to the Media Library by default.
    - sets Elementor's **Global Colors** and **Global Fonts** (Open Sans), plus default buttons, links and a 1200px content width.
-   - creates the **Get a quote** Gravity form and adds it to the homepage and the Contact page.
+   - creates the **Get a quote** Gravity form for the homepage, and the **Contact enquiry** form for the Contact page.
    - creates the **Home** page in Elementor and makes it the front page.
    - creates the **Product categories** (matching the category pages) and adds the 8 soils from the design as **Products**.
    - creates the JetEngine **Product card** listing.
    - builds the **Soils** category page in Elementor (design 7a), with a JetEngine Listing Grid of the soils.
    - builds the **About** page in Elementor (design 8a).
+   - builds the **Contact** page in Elementor (design 10a).
    - creates the **header** and **footer** in Elementor Pro's Theme Builder and shows them on the whole site.
    - creates the **Product page** in the Theme Builder (a Single template) and shows it on every Product's **View details** page.
 
@@ -80,6 +81,24 @@ The About page is built in Elementor from design 8a, "About us — rebuilt in th
 - **Come and see us:** "The best way to choose is in person". It has address, hours and phone, **Get directions** (opens Google Maps in a new tab) and **Get a quote** buttons, and a Google Maps embed.
 
 Text in **[square brackets]** in "Our story" needs the client's real details. The photo panels are containers; set a photo under **Style → Background → Image**. The Bali imports card already shows the carved-panel photo from the old site.
+
+### Contact page (design 10a)
+The Contact page is built in Elementor from design 10a, "Contact us — call, visit or send an enquiry". Its sections, top to bottom:
+- **Intro (green):** breadcrumbs, "Get in touch", a lead paragraph and three cards:
+  - **Call the yard:** the phone number and a **Call now** button.
+  - **Email us:** the email address and a **Send an email** button.
+  - **Visit the yard:** the address and **Get directions**, which opens Google Maps in a new tab.
+- **Send an enquiry:** the **Contact enquiry** Gravity form, beside an **Opening hours** card and a **Trade customers** card.
+- **Getting here (terracotta):** the address, three steps for arriving at the yard, **Open in Google Maps** and **Delivery areas** buttons, and a Google Maps embed.
+
+**The enquiry form** (*Forms → Contact enquiry*) starts with a row of topic pills: Landscape supplies, Bali imports, Delivery quote, Trade account and Something else. The fields below change with the topic, using Gravity Forms conditional logic:
+- *Landscape supplies* and *Delivery quote* add the delivery suburb and how many m³.
+- *Trade account* adds the business name and ABN.
+- Each topic gets its own message box with a prompt to suit.
+
+A link can pre-select a topic with `?topic=` in the URL. For example, the trade card links to `/contact/?topic=Trade%20account#enquiry`. Under the button it says "We reply the same business day." After sending, the form shows a thank-you message with a tick. Enquiries go to the site admin email; change that under *Forms → Contact enquiry → Settings → Notifications*.
+
+**Opening hours** lists each day. Today's row is highlighted with "Today", using Perth time, so it's right even on cached pages. The hours are separate Heading widgets, so you can edit them in Elementor. They come from `bss_hours()` in the plugin's `includes/data.php`.
 
 ### Products
 Each product card is a **Product** post (admin menu → **Products**):
@@ -186,4 +205,5 @@ These are the parts I couldn't test without a live WordPress site and the licens
 - **Opening badge.** "Open today until 4:30pm" in the hero is static text.
 - **Dropdown sub-items** came from the design. Check them against what the yard actually stocks.
 - **Pages.** Category, Delivery, About and legal pages only have a one-line intro for now.
-- **Quote emails** go to the site admin email. Change this under Forms → Get a quote → Settings → Notifications.
+- **Quote emails** go to the site admin email. Change this under Forms → Get a quote → Settings → Notifications. The same goes for the Contact page's **Contact enquiry** form (Forms → Contact enquiry).
+- **Contact page.** Confirm the email address shown as **[sales@balisands.com.au]**: it's from the design. Fix the text in the Email card's heading, and the address in the **Send an email** button's link (`mailto:`), or change `email` in `bss_business()` and rebuild the page. Also confirm the public holiday closures (**[Christmas Day, Good Friday]**) and the first "Getting here" step (**[About 25 minutes from Perth CBD via Tonkin Hwy — confirm]**). Remove the square brackets once the text is right.

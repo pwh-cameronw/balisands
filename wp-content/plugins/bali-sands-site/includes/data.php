@@ -27,7 +27,35 @@ function bss_business() {
 		'hours'   => 'Mon–Sat 6am–4:30pm · Sun 8am–2pm',
 		'abn'     => '36 155 602 547',
 		'maps'    => 'https://www.google.com/maps/search/?api=1&query=462+Nicholson+Road+Forrestdale+WA+6112',
+		// From the design; the client to confirm (shown in [square brackets] on the Contact page).
+		'email'   => 'sales@balisands.com.au',
 	);
+}
+
+/**
+ * Opening hours, Monday first: [day, hours].
+ *
+ * @return array<int,array{0:string,1:string}>
+ */
+function bss_hours() {
+	return array(
+		array( 'Monday', '6:00am – 4:30pm' ),
+		array( 'Tuesday', '6:00am – 4:30pm' ),
+		array( 'Wednesday', '6:00am – 4:30pm' ),
+		array( 'Thursday', '6:00am – 4:30pm' ),
+		array( 'Friday', '6:00am – 4:30pm' ),
+		array( 'Saturday', '6:00am – 4:30pm' ),
+		array( 'Sunday', '8:00am – 2:00pm' ),
+	);
+}
+
+/**
+ * Contact enquiry form topics (design 10a), in order. The first is pre-selected.
+ *
+ * @return string[]
+ */
+function bss_contact_topics() {
+	return array( 'Landscape supplies', 'Bali imports', 'Delivery quote', 'Trade account', 'Something else' );
 }
 
 /**

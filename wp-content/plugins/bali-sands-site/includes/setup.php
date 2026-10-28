@@ -140,6 +140,7 @@ function bss_setup_page() {
 				'rebuild_theme'      => ! empty( $_POST['bss_rebuild_theme'] ),
 				'rebuild_product'    => ! empty( $_POST['bss_rebuild_product'] ),
 				'rebuild_menu'       => ! empty( $_POST['bss_rebuild_menu'] ),
+				'rebuild_contact'    => ! empty( $_POST['bss_rebuild_contact'] ),
 			)
 		);
 		delete_transient( 'bss_setup_notice' );
@@ -205,6 +206,9 @@ function bss_setup_page() {
 				?>
 				</label></p>
 			<?php endif; ?>
+			<?php if ( get_option( 'bss_contact_built' ) ) : ?>
+				<p><label><input type="checkbox" name="bss_rebuild_contact" value="1"> <?php esc_html_e( 'Rebuild the Contact page layout (replaces any Elementor edits to it)', 'bali-sands-site' ); ?></label></p>
+			<?php endif; ?>
 			<?php if ( get_option( 'bss_about_built' ) ) : ?>
 				<p><label><input type="checkbox" name="bss_rebuild_about" value="1"> <?php esc_html_e( 'Rebuild the About page layout (replaces any Elementor edits to it)', 'bali-sands-site' ); ?></label></p>
 			<?php endif; ?>
@@ -233,7 +237,7 @@ function bss_setup_page() {
 /**
  * Run every step.
  *
- * @param array $opts rebuild_home, rebuild_categories, rebuild_about, rebuild_theme, rebuild_product, rebuild_menu.
+ * @param array $opts rebuild_home, rebuild_categories, rebuild_about, rebuild_contact, rebuild_theme, rebuild_product, rebuild_menu.
  * @return string[] Log lines.
  */
 function bss_run_setup( $opts ) {
@@ -257,6 +261,9 @@ function bss_run_setup( $opts ) {
 	$log[] = bss_setup_product_listing( ! empty( $opts['rebuild_categories'] ) );
 	$log[] = bss_setup_category_layouts( ! empty( $opts['rebuild_categories'] ) );
 	$log[] = bss_setup_about( ! empty( $opts['rebuild_about'] ) );
+	$contact_form = bss_setup_contact_form();
+	$log[]        = $contact_form['log'];
+	$log[]        = bss_setup_contact( $contact_form['id'], ! empty( $opts['rebuild_contact'] ) );
 	$log[] = bss_setup_mega_menu( ! empty( $opts['rebuild_menu'] ) );
 	$log[] = bss_setup_theme_template( 'header', 'Bali Sands header', ! empty( $opts['rebuild_theme'] ) );
 	$log[] = bss_setup_theme_template( 'footer', 'Bali Sands footer', ! empty( $opts['rebuild_theme'] ) );
@@ -1269,6 +1276,174 @@ function bss_setup_mega_menu( $rebuild ) {
 
 	$state = $exists ? ( $rebuild ? 'rebuilt' : 'already exists, layout left as it is' ) : 'created';
 	return sprintf( 'Mega menu: %s, on the Main menu\'s "Landscape supplies" item (Appearance → Menus → that item → JetMenu → Edit Mega Menu Item Content).', $state );
+}
+
+/**
+ * The Gravity Forms "Contact enquiry" form (design 10a), once.
+ *
+ * A topic picked from pills; delivery fields for Landscape supplies and
+ * Delivery quote, business name and ABN for Trade account; and a message box
+ * whose prompt suits the topic (one per topic group, shown by conditional
+ * logic). The topic can be pre-selected with ?topic=… in the page URL.
+ *
+ * @return array{id:int,log:string}
+ */
+function bss_setup_contact_form() {
+	if ( ! class_exists( 'GFAPI' ) ) {
+		return array(
+			'id'  => 0,
+			'log' => 'Contact enquiry form skipped: Gravity Forms is not active.',
+		);
+	}
+
+	$form_id = (int) get_option( 'bss_form_contact' );
+	if ( $form_id && GFAPI::get_form( $form_id ) ) {
+		return array(
+			'id'  => $form_id,
+			'log' => 'Contact enquiry form: already exists (Gravity form #' . $form_id . ').',
+		);
+	}
+
+	$field = static function ( $id, $type, $label, $extra = array() ) {
+		return array_merge(
+			array(
+				'id'                   => $id,
+				'type'                 => $type,
+				'label'                => $label,
+				'placeholder'          => $label,
+				'labelPlacement'       => 'hidden_label',
+				'layoutGridColumnSpan' => 12,
+				'isRequired'           => false,
+			),
+			$extra
+		);
+	};
+	// Show a field only for some topics.
+	$when = static function ( $topics ) {
+		$rules = array();
+		foreach ( $topics as $topic ) {
+			$rules[] = array(
+				'fieldId'  => '1',
+				'operator' => 'is',
+				'value'    => $topic,
+			);
+		}
+		return array(
+			'conditionalLogic' => array(
+				'actionType' => 'show',
+				'logicType'  => 'any',
+				'rules'      => $rules,
+			),
+		);
+	};
+
+	$topics  = bss_contact_topics();
+	$choices = array();
+	foreach ( $topics as $i => $topic ) {
+		$choices[] = array(
+			'text'       => $topic,
+			'value'      => $topic,
+			'isSelected' => 0 === $i,
+		);
+	}
+	$supplies = array( 'Landscape supplies', 'Delivery quote' );
+
+	$form = array(
+		'title'                => 'Contact enquiry',
+		'description'          => '',
+		'labelPlacement'       => 'top_label',
+		'descriptionPlacement' => 'below',
+		'button'               => array(
+			'type' => 'text',
+			'text' => 'Send enquiry',
+		),
+		'fields'               => array(
+			$field(
+				1,
+				'radio',
+				'What can we help with?',
+				array(
+					'placeholder'       => '',
+					'choices'           => $choices,
+					'isRequired'        => true,
+					'cssClass'          => 'bs-gf-pills',
+					'allowsPrepopulate' => true,
+					'inputName'         => 'topic',
+				)
+			),
+			$field( 2, 'text', 'Your name', array( 'isRequired' => true, 'layoutGridColumnSpan' => 6, 'autocompleteAttribute' => 'name' ) ),
+			$field( 3, 'phone', 'Phone', array( 'isRequired' => true, 'layoutGridColumnSpan' => 6, 'phoneFormat' => 'international' ) ),
+			$field( 4, 'email', 'Email' ),
+			$field( 5, 'text', 'Delivery suburb (optional)', array_merge( array( 'layoutGridColumnSpan' => 8 ), $when( $supplies ) ) ),
+			$field( 6, 'text', 'How many m³', array_merge( array( 'layoutGridColumnSpan' => 4 ), $when( $supplies ) ) ),
+			$field( 7, 'text', 'Business name', array_merge( array( 'layoutGridColumnSpan' => 6, 'isRequired' => true ), $when( array( 'Trade account' ) ) ) ),
+			$field( 8, 'text', 'ABN', array_merge( array( 'layoutGridColumnSpan' => 6 ), $when( array( 'Trade account' ) ) ) ),
+			$field( 9, 'textarea', 'Message', array_merge( array( 'isRequired' => true, 'placeholder' => 'What\'s the job? Product, how much, and when you need it' ), $when( $supplies ) ) ),
+			$field( 10, 'textarea', 'Message', array_merge( array( 'isRequired' => true, 'placeholder' => 'Which piece are you after? Size, style, where it\'s going…' ), $when( array( 'Bali imports' ) ) ) ),
+			$field( 11, 'textarea', 'Message', array_merge( array( 'isRequired' => true, 'placeholder' => 'Tell us about your business and what you buy regularly' ), $when( array( 'Trade account' ) ) ) ),
+			$field( 12, 'textarea', 'Message', array_merge( array( 'isRequired' => true, 'placeholder' => 'How can we help?' ), $when( array( 'Something else' ) ) ) ),
+		),
+		'notifications'        => array(
+			'bss0contact0admin' => array(
+				'id'       => 'bss0contact0admin',
+				'name'     => 'Enquiry to the yard',
+				'isActive' => true,
+				'event'    => 'form_submission',
+				'toType'   => 'email',
+				'to'       => '{admin_email}',
+				'replyTo'  => '{Email:4}',
+				'subject'  => '{What can we help with?:1} enquiry from {Your name:2}',
+				'message'  => '{all_fields}',
+			),
+		),
+		'confirmations'        => array(
+			'bss0contact0thanks' => array(
+				'id'        => 'bss0contact0thanks',
+				'name'      => 'Default Confirmation',
+				'isDefault' => true,
+				'type'      => 'message',
+				'message'   => '<div class="bs-gf-thanks"><div class="bs-gf-thanks__tick">✓</div><h2>Thanks, we\'ve got it</h2><p>We\'ll be in touch the same business day. Need it sooner? Call the yard on <a href="' . esc_attr( bss_business()['tel'] ) . '">' . esc_html( bss_business()['phone'] ) . '</a>.</p><p><a class="bs-gf-thanks__again" href="' . esc_url( bss_page_url( 'contact' ) ) . '#enquiry">Send another enquiry</a></p></div>',
+			),
+		),
+	);
+
+	$form_id = GFAPI::add_form( $form );
+	if ( is_wp_error( $form_id ) ) {
+		return array(
+			'id'  => 0,
+			'log' => 'Contact enquiry form could not be created: ' . $form_id->get_error_message(),
+		);
+	}
+	$form_id = (int) $form_id;
+	update_option( 'bss_form_contact', $form_id, false );
+	return array(
+		'id'  => $form_id,
+		'log' => 'Contact enquiry form: created (Gravity form #' . $form_id . '). Enquiries go to the site admin email; change it under Forms → Contact enquiry → Settings → Notifications.',
+	);
+}
+
+/**
+ * Give the Contact page its Elementor layout (design 10a), once or when asked.
+ *
+ * @param int  $form_id Contact enquiry form id.
+ * @param bool $rebuild Overwrite the layout.
+ * @return string
+ */
+function bss_setup_contact( $form_id, $rebuild ) {
+	if ( ! did_action( 'elementor/loaded' ) ) {
+		return '';
+	}
+	$id = bss_page_id( 'contact' );
+	if ( ! $id ) {
+		return 'Contact page not found: run setup again.';
+	}
+	if ( get_option( 'bss_contact_built' ) && ! $rebuild ) {
+		return 'Contact page: layout already built, left as it is.';
+	}
+	update_post_meta( $id, '_wp_page_template', 'elementor_header_footer' );
+	bss_save_elementor( $id, bss_contact_elements( $form_id ), 'wp-page' );
+	update_option( 'bss_contact_built', 1, false );
+	return 'Contact page: built in Elementor (design 10a). Text in [square brackets] needs the real details.';
 }
 
 /**
