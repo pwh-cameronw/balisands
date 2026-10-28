@@ -138,6 +138,7 @@ function bss_setup_page() {
 				'rebuild_categories' => ! empty( $_POST['bss_rebuild_categories'] ),
 				'rebuild_about'      => ! empty( $_POST['bss_rebuild_about'] ),
 				'rebuild_theme'      => ! empty( $_POST['bss_rebuild_theme'] ),
+				'rebuild_footer'     => ! empty( $_POST['bss_rebuild_footer'] ),
 				'rebuild_product'    => ! empty( $_POST['bss_rebuild_product'] ),
 				'rebuild_menu'       => ! empty( $_POST['bss_rebuild_menu'] ),
 				'rebuild_mega'       => ! empty( $_POST['bss_rebuild_mega'] ),
@@ -219,6 +220,9 @@ function bss_setup_page() {
 			<?php if ( get_option( 'bss_header_id' ) || get_option( 'bss_footer_id' ) ) : ?>
 				<p><label><input type="checkbox" name="bss_rebuild_theme" value="1"> <?php esc_html_e( 'Rebuild the header and footer layouts (replaces any Elementor edits to them)', 'bali-sands-site' ); ?></label></p>
 			<?php endif; ?>
+			<?php if ( get_option( 'bss_footer_id' ) ) : ?>
+				<p><label><input type="checkbox" name="bss_rebuild_footer" value="1"> <?php esc_html_e( 'Rebuild only the footer layout (replaces any Elementor edits to the footer; the header is left alone)', 'bali-sands-site' ); ?></label></p>
+			<?php endif; ?>
 			<?php if ( get_option( 'bss_product_page_id' ) ) : ?>
 				<p><label><input type="checkbox" name="bss_rebuild_product" value="1"> <?php esc_html_e( 'Rebuild the product page layout (replaces any Elementor edits to it)', 'bali-sands-site' ); ?></label></p>
 			<?php endif; ?>
@@ -241,7 +245,7 @@ function bss_setup_page() {
 /**
  * Run every step.
  *
- * @param array $opts rebuild_home, rebuild_categories, rebuild_about, rebuild_contact, rebuild_theme, rebuild_product, rebuild_menu, rebuild_mega.
+ * @param array $opts rebuild_home, rebuild_categories, rebuild_about, rebuild_contact, rebuild_theme, rebuild_footer, rebuild_product, rebuild_menu, rebuild_mega.
  * @return string[] Log lines.
  */
 function bss_run_setup( $opts ) {
@@ -270,7 +274,7 @@ function bss_run_setup( $opts ) {
 	$log[]        = bss_setup_contact( $contact_form['id'], ! empty( $opts['rebuild_contact'] ) );
 	$log[] = bss_setup_mega_menu( ! empty( $opts['rebuild_menu'] ) || ! empty( $opts['rebuild_mega'] ) );
 	$log[] = bss_setup_theme_template( 'header', 'Bali Sands header', ! empty( $opts['rebuild_theme'] ) );
-	$log[] = bss_setup_theme_template( 'footer', 'Bali Sands footer', ! empty( $opts['rebuild_theme'] ) );
+	$log[] = bss_setup_theme_template( 'footer', 'Bali Sands footer', ! empty( $opts['rebuild_theme'] ) || ! empty( $opts['rebuild_footer'] ) );
 	$log[] = bss_setup_theme_template( 'product_page', 'Product page', ! empty( $opts['rebuild_product'] ) );
 
 	if ( did_action( 'elementor/loaded' ) ) {

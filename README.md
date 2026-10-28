@@ -133,6 +133,20 @@ The header's backgrounds (green top bar, white bar) run the full width of the sc
 
 **Updating from 1.3.0 or earlier:** run setup with **Rebuild the header and footer layouts** ticked. Or, in the header template, select the top bar and the white bar containers and set **Layout → Content Width** to *Boxed*.
 
+### Footer on phones
+Below 768px wide the footer has its own layout, built from phone-only widgets in the footer template (Elementor **Advanced → Responsive → Hide on desktop / tablet**):
+- **Brand:** the logo beside the wordmark.
+- **Buttons:** **Call the yard** (amber) and **Directions**, which opens Google Maps.
+- **Visit:** the address and opening hours.
+- **Link lists:** **Landscape supplies**, **Bali imports** and **Company** (Delivery, About us, Contact; the menu *Footer: Company*) as accordions. Tap a heading to open its links; the amber + turns to −.
+- **Small print:** "© Bali Sands · Privacy · Terms", with the "Website by" credit on the same line.
+
+On phones the blurb, the "Find the yard" column and the ABN line are hidden. Desktop and tablet are unchanged. The accordion code is in the plugin's `assets/css/footer.css` and `assets/js/footer.js`. Any footer column with the CSS class `bs-footer-acc`, whose heading has `bs-footer-acc__head`, works as an accordion.
+
+Setup also creates **Privacy Policy** and **Terms & Conditions** pages for the Privacy and Terms links. They hold placeholder text in [square brackets] until the real policies are written.
+
+**Updating an installed site:** run setup with **Rebuild only the footer layout** ticked. That creates the Company menu and the Privacy and Terms pages, and leaves the header alone.
+
 ### Changing section backgrounds
 Each section is a top-level container whose background is a **Global Color**. To change one section, select it and go to **Style → Background**, then pick another global colour (or a custom one). To change a colour everywhere, go to **Site Settings → Global Colors**.
 
@@ -220,6 +234,6 @@ These are the parts I couldn't test without a live WordPress site and the licens
 - **Delivery facts.** Check "0.5–8m³ per tipper", and the 8m³ tipper size the calculator uses: it's the `tipper="8"` attribute in the calculator's Shortcode widget.
 - **Opening badge.** "Open today until 4:30pm" in the hero is static text.
 - **Dropdown sub-items** came from the design. Check them against what the yard actually stocks.
-- **Pages.** Category, Delivery, About and legal pages only have a one-line intro for now.
+- **Pages.** Category and Delivery pages only have a one-line intro for now. **Privacy Policy** and **Terms & Conditions** (linked from the footer on phones) need the real policies.
 - **Quote emails** go to the site admin email. Change this under Forms → Get a quote → Settings → Notifications. The same goes for the Contact page's **Contact enquiry** form (Forms → Contact enquiry).
 - **Contact page.** Confirm the email address shown as **[sales@balisands.com.au]**: it's from the design. Fix the text in the Email card's heading, and the address in the **Send an email** button's link (`mailto:`), or change `email` in `bss_business()` and rebuild the page. Also confirm the public holiday closures (**[Christmas Day, Good Friday]**) and the first "Getting here" step (**[About 25 minutes from Perth CBD via Tonkin Hwy — confirm]**). Remove the square brackets once the text is right.

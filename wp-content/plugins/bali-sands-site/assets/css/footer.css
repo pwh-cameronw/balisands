@@ -1,0 +1,79 @@
+/*
+ * Footer on phones (below 768px): the link columns are accordions, one per
+ * row, divided by lines, with an amber + / − (assets/js/footer.js opens them).
+ * Colours and fonts read Elementor's Global Colors and Global Fonts.
+ */
+@media (max-width: 767px) {
+	.bs-footer .bs-footer-acc {
+		border-top: 1px solid rgba(255, 255, 255, .14);
+	}
+
+	/* The first accordion (after the logo, buttons and address). */
+	.bs-footer .e-con:not(.bs-footer-acc) + .bs-footer-acc {
+		margin-top: 24px;
+	}
+
+	.bs-footer .bs-footer-acc__head .elementor-heading-title {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+		padding: 16px 0;
+		/* Over the Footer heading global font, which Elementor applies more specifically. */
+		font-size: 15px !important;
+		line-height: 1.3 !important;
+		cursor: pointer;
+		-webkit-tap-highlight-color: transparent;
+	}
+
+	.bs-footer .bs-footer-acc__head .elementor-heading-title a {
+		color: inherit;
+	}
+
+	.bs-footer .bs-footer-acc__head .elementor-heading-title::after {
+		content: "+";
+		flex: none;
+		font-weight: 400;
+		font-size: 22px;
+		line-height: 1;
+		color: var(--e-global-color-accent, #E2A63B);
+	}
+
+	.bs-footer .bs-footer-acc.is-open .bs-footer-acc__head .elementor-heading-title::after {
+		content: "\2212";
+	}
+
+	.bs-footer .bs-footer-acc__head .elementor-heading-title:focus-visible {
+		outline: 2px solid var(--e-global-color-accent, #E2A63B);
+		outline-offset: 2px;
+	}
+
+	/* Links hidden until the row is opened. */
+	.bs-footer .bs-footer-acc:not(.is-open) > .elementor-widget-nav-menu {
+		display: none;
+	}
+
+	.bs-footer .bs-footer-acc.is-open > .elementor-widget-nav-menu {
+		margin: 0 0 14px !important;
+	}
+
+	/* Small print: links in the same muted colour; the credit on the same row. */
+	.bs-footer .bs-footer-fine a {
+		color: inherit;
+	}
+
+	.bs-footer .e-con:has(> .bs-footer-credit) {
+		flex-wrap: nowrap !important;
+		align-items: center !important;
+	}
+
+	.bs-footer .bs-footer-credit {
+		width: auto !important;
+		flex: none !important;
+		gap: 6px !important;
+	}
+
+	.bs-footer .bs-footer-credit img {
+		width: 64px !important;
+	}
+}

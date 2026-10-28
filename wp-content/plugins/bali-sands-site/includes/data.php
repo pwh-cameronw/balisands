@@ -249,6 +249,9 @@ function bss_pages() {
 		'delivery'         => array( 'Delivery', '', 'delivery', '', 'Tipper loads from half a cube upwards, across the Perth metro.' ),
 		'about'            => array( 'About', '', 'about', '', 'A local yard in Forrestdale, with a little bit of Bali out the back.' ),
 		'contact'          => array( 'Contact', '', 'contact', '', 'Tell us about the job and we\'ll work out what you need.' ),
+
+		'privacy'          => array( 'Privacy Policy', '', 'privacy', '', '[Privacy policy to come.]' ),
+		'terms'            => array( 'Terms & Conditions', '', 'terms', '', '[Terms and conditions to come.]' ),
 	);
 }
 
@@ -303,6 +306,11 @@ function bss_footer_menus() {
 			'Mulch'                      => 'mulch',
 			'Limestone, pavers & cement' => 'paving',
 			'Edging, tools & retic'      => 'edging',
+		),
+		'Footer: Company'            => array(
+			'Delivery' => 'delivery',
+			'About us' => 'about',
+			'Contact'  => 'contact',
 		),
 		'Footer: Bali imports'       => array(
 			'Gazebos & outdoor furniture' => 'imports-gazebos',

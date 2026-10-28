@@ -6,12 +6,24 @@
  * back to Elementor Pro's Nav Menu if JetMenu isn't active) and the "Get a
  * quote" button. Backgrounds run full width; the content is boxed to the site
  * width, so on wide screens it lines up with the page sections below. Footer: four columns and the small print. All separate
- * widgets; backgrounds are Global Colors.
+ * widgets; backgrounds are Global Colors. On phones the footer has its own
+ * layout: logo, call and directions buttons, address and hours, then the link
+ * columns as accordions (assets/css/footer.css, assets/js/footer.js).
  *
  * @package BaliSandsSite
  */
 
 defined( 'ABSPATH' ) || exit;
+
+add_action( 'wp_enqueue_scripts', 'bss_footer_assets' );
+
+/**
+ * The footer's phone layout: accordion styles and script.
+ */
+function bss_footer_assets() {
+	wp_enqueue_style( 'bss-footer', BSS_URL . 'assets/css/footer.css', array(), bss_asset_ver( 'assets/css/footer.css' ) );
+	wp_enqueue_script( 'bss-footer', BSS_URL . 'assets/js/footer.js', array(), bss_asset_ver( 'assets/js/footer.js' ), true );
+}
 
 /**
  * Main menu widget: JetMenu Mega Menu when available, otherwise Elementor Pro Nav Menu.
@@ -242,50 +254,115 @@ function bss_footer_elements() {
 		);
 	};
 
-	$column = static function ( $seed, $percent, $elements ) {
+	$column = static function ( $seed, $percent, $elements, $extra = array() ) {
 		return bss_container(
 			$seed,
-			array(
-				'width'        => bss_size( $percent, '%' ),
-				'width_tablet' => bss_size( 46, '%' ),
-				'width_mobile' => bss_size( 100, '%' ),
+			bss_merge(
+				array(
+					'width'        => bss_size( $percent, '%' ),
+					'width_tablet' => bss_size( 46, '%' ),
+					'width_mobile' => bss_size( 100, '%' ),
+				),
+				$extra
 			),
 			$elements
 		);
 	};
 
+	// On phones a link column is an accordion: tap its heading to open its links (assets/js/footer.js).
+	$accordion  = array( 'css_classes' => 'bs-footer-acc' );
+	$acc_head   = array( '_css_classes' => 'bs-footer-acc__head' );
+	$phone_only = array(
+		'hide_desktop' => 'hidden-desktop',
+		'hide_tablet'  => 'hidden-tablet',
+	);
+
 	$columns = bss_container(
 		'footer/columns',
 		array(
-			'flex_direction' => 'row',
-			'flex_wrap'      => 'nowrap',
+			'flex_direction'   => 'row',
+			'flex_wrap'        => 'nowrap',
 			'flex_wrap_tablet' => 'wrap',
-			'flex_gap'       => bss_gap( 36, 32 ),
+			'flex_gap'         => bss_gap( 36, 32 ),
+			// Phones: the accordions sit flush, divided by lines (assets/css/footer.css).
+			'flex_gap_mobile'  => bss_gap( 0 ),
 		),
 		array(
 			$column(
 				'footer/col-about',
 				31,
 				array(
-					bss_heading( 'footer/wordmark', 'Bali Sands', 'div', 'bs_brand', 'bs_white', array( 'link' => bss_link( home_url( '/' ) ) ) ),
-					bss_text( 'footer/blurb', '<p>Landscape supplies and Bali imports from our Forrestdale yard. Open seven days, delivery across Perth.</p>', 'bs_footer', 'bs_footer_text', bss_merge( bss_mt( 12 ), bss_max_width( 270 ) ) ),
+					bss_container(
+						'footer/brand',
+						array(
+							'flex_direction'   => 'row',
+							'flex_align_items' => 'center',
+							'flex_gap'         => bss_gap( 10 ),
+						),
+						array(
+							// The logo shows beside the wordmark on phones only.
+							bss_image(
+								'footer/logo',
+								bss_media_id( 'logo' ),
+								bss_merge(
+									array(
+										'image_size'     => 'full',
+										'width'          => bss_size( 34 ),
+										'_element_width' => 'auto',
+									),
+									$phone_only
+								)
+							),
+							bss_heading( 'footer/wordmark', 'Bali Sands', 'div', 'bs_brand', 'bs_white', array( 'link' => bss_link( home_url( '/' ) ), '_element_width' => 'auto' ) ),
+						)
+					),
+					bss_text( 'footer/blurb', '<p>Landscape supplies and Bali imports from our Forrestdale yard. Open seven days, delivery across Perth.</p>', 'bs_footer', 'bs_footer_text', bss_merge( bss_mt( 12 ), bss_max_width( 270 ), array( 'hide_mobile' => 'hidden-mobile' ) ) ),
+					// Phones: call and directions buttons, then the address and hours (the "Find the yard" column is hidden there).
+					bss_container(
+						'footer/mobile-contact',
+						bss_merge( array( 'margin' => bss_box( 20, 0, 4, 0 ) ), $phone_only ),
+						array(
+							bss_grid(
+								'footer/mobile-buttons',
+								array( 2, 2, 2 ),
+								10,
+								array(
+									bss_button( 'footer/btn-call', 'Call the yard', $biz['tel'], 'amber', array( 'align' => 'justify', 'text_padding' => bss_box( 15, 10 ) ) ),
+									bss_button( 'footer/btn-directions', 'Directions', $biz['maps'], 'outline-light', array( 'align' => 'justify', 'text_padding' => bss_box( 13, 10 ), 'link' => bss_link( $biz['maps'], true ) ) ),
+								)
+							),
+							bss_text( 'footer/mobile-visit', '<p>' . esc_html( $biz['short'] ) . ' WA 6112<br>' . esc_html( $biz['hours'] ) . '</p>', 'bs_footer', 'bs_footer_text', bss_mt( 16 ) ),
+						)
+					),
 				)
 			),
 			$column(
 				'footer/col-supplies',
 				23,
 				array(
-					bss_heading( 'footer/supplies-title', 'Landscape supplies', 'div', 'bs_footer_head', 'bs_white', array( 'link' => bss_link( bss_page_url( 'supplies' ) ) ) ),
+					bss_heading( 'footer/supplies-title', 'Landscape supplies', 'div', 'bs_footer_head', 'bs_white', bss_merge( array( 'link' => bss_link( bss_page_url( 'supplies' ) ) ), $acc_head ) ),
 					$menu_list( 'footer/supplies-menu', 'Footer: Landscape supplies' ),
-				)
+				),
+				$accordion
 			),
 			$column(
 				'footer/col-imports',
 				23,
 				array(
-					bss_heading( 'footer/imports-title', 'Bali imports', 'div', 'bs_footer_head', 'bs_white', array( 'link' => bss_link( bss_page_url( 'imports' ) ) ) ),
+					bss_heading( 'footer/imports-title', 'Bali imports', 'div', 'bs_footer_head', 'bs_white', bss_merge( array( 'link' => bss_link( bss_page_url( 'imports' ) ) ), $acc_head ) ),
 					$menu_list( 'footer/imports-menu', 'Footer: Bali imports' ),
-				)
+				),
+				$accordion
+			),
+			// Phones only: Delivery, About us and Contact.
+			$column(
+				'footer/col-company',
+				23,
+				array(
+					bss_heading( 'footer/company-title', 'Company', 'div', 'bs_footer_head', 'bs_white', $acc_head ),
+					$menu_list( 'footer/company-menu', 'Footer: Company' ),
+				),
+				bss_merge( $accordion, $phone_only )
 			),
 			$column(
 				'footer/col-visit',
@@ -299,7 +376,8 @@ function bss_footer_elements() {
 						'bs_footer_text',
 						bss_mt( 12 )
 					),
-				)
+				),
+				array( 'hide_mobile' => 'hidden-mobile' )
 			),
 		)
 	);
@@ -308,6 +386,7 @@ function bss_footer_elements() {
 	$credit = bss_container(
 		'footer/credit',
 		array(
+			'css_classes'                 => 'bs-footer-credit',
 			'flex_direction'              => 'row',
 			'flex_justify_content'        => 'flex-end',
 			'flex_justify_content_mobile' => 'flex-start',
@@ -352,7 +431,19 @@ function bss_footer_elements() {
 			'border_color'         => 'rgba(255,255,255,0.14)',
 		),
 		array(
-			bss_heading( 'footer/copyright', '© ' . gmdate( 'Y' ) . ' Bali Sands · ABN ' . $biz['abn'], 'div', 'bs_fine', 'bs_footer_muted', array( '_element_width' => 'auto' ) ),
+			bss_heading( 'footer/copyright', '© ' . gmdate( 'Y' ) . ' Bali Sands · ABN ' . $biz['abn'], 'div', 'bs_fine', 'bs_footer_muted', array( '_element_width' => 'auto', 'hide_mobile' => 'hidden-mobile' ) ),
+			bss_text(
+				'footer/copyright-mobile',
+				'<p>© ' . gmdate( 'Y' ) . ' Bali Sands · <a href="' . esc_url( bss_page_url( 'privacy' ) ) . '">Privacy</a> · <a href="' . esc_url( bss_page_url( 'terms' ) ) . '">Terms</a></p>',
+				'bs_fine',
+				'bs_footer_muted',
+				array(
+					'_element_width' => 'auto',
+					'_css_classes'   => 'bs-footer-fine',
+					'hide_desktop'   => 'hidden-desktop',
+					'hide_tablet'    => 'hidden-tablet',
+				)
+			),
 			$credit,
 		)
 	);
