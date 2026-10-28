@@ -171,6 +171,17 @@ Hovering or tabbing to a category switches the right pane (the plugin's `assets/
 
 To update the panel on an installed site, run setup with **Rebuild only the Landscape supplies mega menu content** ticked. That leaves the menu items alone. **Rebuild the main menu** rebuilds both the items and the panel.
 
+### Mobile menu (phones and tablets)
+Below 1025px wide, the header's ☰ button opens the plugin's own full-screen menu instead of JetMenu's dropdown.
+- **Panel:** green, with the wordmark and a round ✕ button.
+- **Rows:** the Main menu's top-level items as large rows.
+- **Sub-menus:** items with a sub-menu (Landscape supplies, Bali imports) have an amber **+** button. It opens a grid of tiles, each with the page's featured image and its name. The section for the page you're on starts open, otherwise the first one does.
+- **Footer:** terracotta with a wavy top, "Open 7 days · Delivery across Perth", and the phone number and **Get a quote** buttons.
+
+It closes with ✕, Escape or following a link.
+
+The items come from **Appearance → Menus → Main menu**, so changes there show up in it. "See all …" items and anything three levels deep are left out. The code is in the plugin's `includes/mobile-menu.php`, `assets/css/mobile-menu.css` and `assets/js/mobile-menu.js`. Any element with the CSS class `bs-mobile-menu-toggle` also opens it.
+
 ### Menu images
 In the main menu, each dropdown row shows **the linked page's featured image**, its title and its menu **Description** (turn Description on under *Screen Options* in Appearance → Menus). To change an image, change the page's featured image.
 - Add the CSS class `bs-no-thumb` to a menu item to hide its image.
@@ -185,7 +196,7 @@ These are the parts I couldn't test without a live WordPress site and the licens
 - **JetMenu dropdown styling.** The plugin's CSS targets JetMenu's class names (`.jet-mega-menu-*`) to give the dropdown its rounded green-bordered panel. If a JetMenu update renames them, set the panel style in the Mega Menu widget's **Style** tab instead. The images still show either way.
 - **JetMenu widget's menu**: in the header, check the Mega Menu widget has **Main menu** selected.
 - **Mega menu**: hover *Landscape supplies*. The five-column panel should open just under the header bar and span from the logo to **Get a quote**. If you see an ordinary dropdown instead, open **Appearance → Menus**, click **JetMenu** on the *Landscape supplies* item, and check **Mega Submenu Enabled** is on and its content is "Mega menu: Landscape supplies". If the panel opens too narrow or in the wrong place, check `assets/css/menu.css` is loading (it sets the panel's width and position).
-- **Mobile menu**: on phones and tablets, the ☰ button opens the menu as a full-width panel under the header bar, with each dropdown opening inline. Check Landscape supplies opens to the five categories and their sub-categories. The plugin's mobile styles start at 1024px wide, which matches the Mega Menu widget's mobile breakpoint set to **Tablet**. If the widget uses a different breakpoint, set it to Tablet (Content tab).
+- **Mobile menu**: on phones and tablets, the ☰ button opens the full-screen menu (see "Mobile menu" above). Check Landscape supplies opens to the five categories and their sub-categories. The plugin's mobile styles start at 1024px wide, which matches the Mega Menu widget's mobile breakpoint set to **Tablet**. If the widget uses a different breakpoint, set it to Tablet (Content tab).
 - **JetEngine Listing Grid** on the Soils page: check it uses the **Product card** listing, and that its **Posts Query** has a *Tax Query* on **Product categories** → slug → `soils`. Set the order (e.g. by menu order, ascending) under the same Posts Query.
 - **Product card listing**: open it once in Elementor to check that each dynamic widget points at the right field: title, *Short description*, *Best for*, *Sold as* terms and permalink.
 - **Gravity Forms look**: the form is embedded with `theme="gravity-theme"` (Gravity Forms 2.5+).
