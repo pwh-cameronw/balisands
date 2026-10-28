@@ -244,8 +244,8 @@ function bss_footer_elements() {
 					'toggle'                       => '',
 					'padding_horizontal_menu_item' => bss_size( 0 ),
 					'padding_vertical_menu_item'   => bss_size( 0 ),
-					'menu_space_between'           => bss_size( 0 ),
-					'_margin'                      => bss_box( 12, 0, 0, 0 ),
+					'menu_space_between'           => bss_size( 3 ),
+					'_margin'                      => bss_box( 14, 0, 0, 0 ),
 				),
 				bss_font( 'bs_footer', 'menu_typography' ),
 				bss_color( 'color_menu_item', 'bs_footer_text' ),
@@ -276,6 +276,33 @@ function bss_footer_elements() {
 		'hide_desktop' => 'hidden-desktop',
 		'hide_tablet'  => 'hidden-tablet',
 	);
+
+	// "Mon–Sat   6am – 4:30pm": a muted label and the hours in white.
+	$hours_row = static function ( $seed, $label, $hours, $margin ) {
+		return bss_container(
+			$seed,
+			array(
+				'flex_direction' => 'row',
+				'flex_wrap'      => 'nowrap',
+				'flex_gap'       => bss_gap( 12 ),
+				'margin'         => bss_box( $margin, 0, 0, 0 ),
+			),
+			array(
+				bss_heading(
+					$seed . '/label',
+					$label,
+					'div',
+					'bs_footer',
+					'bs_footer_text',
+					array(
+						'_element_width'        => 'initial',
+						'_element_custom_width' => bss_size( 72 ),
+					)
+				),
+				bss_heading( $seed . '/hours', $hours, 'div', 'bs_footer', 'bs_white', array( '_element_width' => 'auto' ) ),
+			)
+		);
+	};
 
 	$columns = bss_container(
 		'footer/columns',
@@ -310,7 +337,37 @@ function bss_footer_elements() {
 							'_element_width' => 'auto',
 						)
 					),
-					bss_text( 'footer/blurb', '<p>Landscape supplies and Bali imports from our Forrestdale yard. Open seven days, delivery across Perth.</p>', 'bs_footer', 'bs_footer_text', bss_merge( bss_mt( 16 ), bss_max_width( 270 ), array( 'hide_mobile' => 'hidden-mobile' ) ) ),
+					bss_text( 'footer/blurb', '<p>Landscape supplies and Bali imports from our Forrestdale yard. Open seven days, delivery across Perth.</p>', 'bs_footer', 'bs_footer_text', bss_merge( bss_mt( 16 ), bss_max_width( 290 ), array( 'hide_mobile' => 'hidden-mobile' ) ) ),
+					// Desktop and tablet: quote and call buttons (phones have their own pair below).
+					bss_container(
+						'footer/buttons',
+						array(
+							'flex_direction' => 'row',
+							'flex_wrap'      => 'wrap',
+							'flex_gap'       => bss_gap( 10 ),
+							'margin'         => bss_box( 20, 0, 0, 0 ),
+							'hide_mobile'    => 'hidden-mobile',
+						),
+						array(
+							bss_button( 'footer/btn-quote', 'Get a quote', home_url( '/#quote' ), 'amber', bss_merge( bss_font( 'bs_button_sm' ), array( 'text_padding' => bss_box( 13, 18 ) ) ) ),
+							bss_button(
+								'footer/btn-phone',
+								$biz['phone'],
+								$biz['tel'],
+								'outline-light',
+								bss_merge(
+									bss_font( 'bs_button_sm' ),
+									array(
+										'text_padding' => bss_box( 12, 16 ),
+										'border_width' => bss_box( 1 ),
+										// A softer border than the usual white outline.
+										'border_color' => 'rgba(255,255,255,0.35)',
+										'__globals__'  => array( 'border_color' => '' ),
+									)
+								)
+							),
+						)
+					),
 					// Phones: call and directions buttons, then the address and hours (the "Find the yard" column is hidden there).
 					bss_container(
 						'footer/mobile-contact',
@@ -334,7 +391,7 @@ function bss_footer_elements() {
 				'footer/col-supplies',
 				23,
 				array(
-					bss_heading( 'footer/supplies-title', 'Landscape supplies', 'div', 'bs_footer_head', 'bs_white', bss_merge( array( 'link' => bss_link( bss_page_url( 'supplies' ) ) ), $acc_head ) ),
+					bss_heading( 'footer/supplies-title', 'Landscape supplies', 'div', 'bs_eyebrow', 'accent', bss_merge( array( 'link' => bss_link( bss_page_url( 'supplies' ) ) ), $acc_head ) ),
 					$menu_list( 'footer/supplies-menu', 'Footer: Landscape supplies' ),
 				),
 				$accordion
@@ -343,7 +400,7 @@ function bss_footer_elements() {
 				'footer/col-imports',
 				23,
 				array(
-					bss_heading( 'footer/imports-title', 'Bali imports', 'div', 'bs_footer_head', 'bs_white', bss_merge( array( 'link' => bss_link( bss_page_url( 'imports' ) ) ), $acc_head ) ),
+					bss_heading( 'footer/imports-title', 'Bali imports', 'div', 'bs_eyebrow', 'accent', bss_merge( array( 'link' => bss_link( bss_page_url( 'imports' ) ) ), $acc_head ) ),
 					$menu_list( 'footer/imports-menu', 'Footer: Bali imports' ),
 				),
 				$accordion
@@ -353,7 +410,7 @@ function bss_footer_elements() {
 				'footer/col-company',
 				23,
 				array(
-					bss_heading( 'footer/company-title', 'Company', 'div', 'bs_footer_head', 'bs_white', $acc_head ),
+					bss_heading( 'footer/company-title', 'Company', 'div', 'bs_eyebrow', 'accent', $acc_head ),
 					$menu_list( 'footer/company-menu', 'Footer: Company' ),
 				),
 				bss_merge( $accordion, $phone_only )
@@ -362,21 +419,18 @@ function bss_footer_elements() {
 				'footer/col-visit',
 				23,
 				array(
-					bss_heading( 'footer/visit-title', 'Find the yard', 'div', 'bs_footer_head', 'bs_white' ),
-					bss_text(
-						'footer/visit',
-						'<p>' . esc_html( $biz['street'] ) . '<br>' . esc_html( $biz['suburb'] ) . '<br><a href="' . esc_attr( $biz['tel'] ) . '">' . esc_html( $biz['phone'] ) . '</a><br>Mon–Sat 6am–4:30pm<br>Sun &amp; public hols 8am–2pm</p>',
-						'bs_footer',
-						'bs_footer_text',
-						bss_mt( 12 )
-					),
+					bss_heading( 'footer/visit-title', 'Find the yard', 'div', 'bs_eyebrow', 'accent' ),
+					bss_text( 'footer/visit-address', '<p><strong>' . esc_html( $biz['street'] ) . '<br>' . esc_html( $biz['suburb'] ) . '</strong></p>', 'bs_footer', 'bs_white', array_merge( bss_mt( 14 ), array( '_css_classes' => 'bs-footer-address' ) ) ),
+					$hours_row( 'footer/hours-week', 'Mon–Sat', '6am – 4:30pm', 10 ),
+					$hours_row( 'footer/hours-sun', 'Sun &amp; hols', '8am – 2pm', 2 ),
+					bss_heading( 'footer/directions', 'Get directions →', 'div', 'bs_link', 'accent', array_merge( bss_mt( 16 ), array( 'link' => bss_link( $biz['maps'], true ) ) ) ),
 				),
 				array( 'hide_mobile' => 'hidden-mobile' )
 			),
 		)
 	);
 
-	// "Website By:" credit with the Perth Web Hosting logo (opens in a new tab).
+	// "Website by" credit with the Perth Web Hosting logo (opens in a new tab).
 	$credit = bss_container(
 		'footer/credit',
 		array(
@@ -390,7 +444,7 @@ function bss_footer_elements() {
 			'width_mobile'                => bss_size( 100, '%' ),
 		),
 		array(
-			bss_heading( 'footer/credit-label', 'Website By:', 'div', 'bs_fine', 'bs_footer_muted', array( '_element_width' => 'auto' ) ),
+			bss_heading( 'footer/credit-label', 'Website by', 'div', 'bs_fine', 'bs_footer_muted', array( '_element_width' => 'auto' ) ),
 			bss_widget(
 				'footer/credit-logo',
 				'image',
