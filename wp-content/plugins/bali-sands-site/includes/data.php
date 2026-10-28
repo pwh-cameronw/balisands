@@ -372,6 +372,7 @@ function bss_category_pages() {
  */
 function bss_products() {
 	$soil = array( '#7A6149', '#4A382A' );
+	$bali = array( '#B9A27E', '#7C6648' );
 	return array(
 		array( 'Garden mix', 'Sandy loam blended with compost. A general-purpose soil for new garden beds and topping up old ones.', 'Garden beds · shrubs · natives', array( 'bulk', 'bagged' ), 'soils-garden', $soil ),
 		array( 'Veggie mix', 'Extra compost and manure for heavy feeders. Ready to plant straight into raised beds.', 'Raised beds · vegetables · herbs', array( 'bulk', 'bagged' ), 'soils-garden', $soil ),
@@ -381,6 +382,13 @@ function bss_products() {
 		array( 'Compost', 'Composted green waste that adds organic matter and helps sandy Perth soil hold water.', 'Soil improving · mulching', array( 'bulk', 'bagged' ), 'soils-compost', $soil ),
 		array( 'Cow manure', 'Aged and composted, so it won\'t burn plants. Dig it in before planting or use it as a top-up.', 'Feeding beds · roses · fruit trees', array( 'bulk', 'bagged' ), 'soils-compost', $soil ),
 		array( 'Clay & soil improver', 'Bentonite clay blend that stops water running straight through sandy soil.', 'Sandy soil · water retention', array( 'bulk', 'bagged' ), 'soils-improvers', $soil ),
+
+		// Bali imports: placeholders for the "New arrivals" on the Bali Imports page (design 14a),
+		// to be replaced with real pieces. Not sold in bulk or bags, so no "Sold as".
+		array( '[Carved stone Buddha, 1.2m]', '[One-off hand-carved piece. Add the real size, stone and price guide.]', '[Gardens · courtyards · entries]', array(), 'imports-statues', $bali ),
+		array( '[Glazed pot set of 3]', '[Add the colours, sizes and whether they\'re sold as a set.]', '[Patios · entries · feature planting]', array(), 'imports-pots', $bali ),
+		array( '[Teak bench, 1.8m]', '[Add the timber, finish and dimensions.]', '[Verandahs · gardens · poolside]', array(), 'imports-gazebos', $bali ),
+		array( '[Three-tier water feature]', '[Add the material, height and pump details.]', '[Courtyards · gardens · entries]', array(), 'imports-water', $bali ),
 	);
 }
 

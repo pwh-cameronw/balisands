@@ -143,6 +143,8 @@ function bss_setup_page() {
 				'rebuild_menu'       => ! empty( $_POST['bss_rebuild_menu'] ),
 				'rebuild_mega'       => ! empty( $_POST['bss_rebuild_mega'] ),
 				'rebuild_contact'    => ! empty( $_POST['bss_rebuild_contact'] ),
+				'rebuild_imports'    => ! empty( $_POST['bss_rebuild_imports'] ),
+				'rebuild_header'     => ! empty( $_POST['bss_rebuild_header'] ),
 			)
 		);
 		delete_transient( 'bss_setup_notice' );
@@ -211,6 +213,9 @@ function bss_setup_page() {
 				?>
 				</label></p>
 			<?php endif; ?>
+			<?php if ( get_option( 'bss_imports_built' ) ) : ?>
+				<p><label><input type="checkbox" name="bss_rebuild_imports" value="1"> <?php esc_html_e( 'Rebuild the Bali Imports page layout (replaces any Elementor edits to it)', 'bali-sands-site' ); ?></label></p>
+			<?php endif; ?>
 			<?php if ( get_option( 'bss_contact_built' ) ) : ?>
 				<p><label><input type="checkbox" name="bss_rebuild_contact" value="1"> <?php esc_html_e( 'Rebuild the Contact page layout (replaces any Elementor edits to it)', 'bali-sands-site' ); ?></label></p>
 			<?php endif; ?>
@@ -219,6 +224,9 @@ function bss_setup_page() {
 			<?php endif; ?>
 			<?php if ( get_option( 'bss_header_id' ) || get_option( 'bss_footer_id' ) ) : ?>
 				<p><label><input type="checkbox" name="bss_rebuild_theme" value="1"> <?php esc_html_e( 'Rebuild the header and footer layouts (replaces any Elementor edits to them)', 'bali-sands-site' ); ?></label></p>
+			<?php endif; ?>
+			<?php if ( get_option( 'bss_header_id' ) ) : ?>
+				<p><label><input type="checkbox" name="bss_rebuild_header" value="1"> <?php esc_html_e( 'Rebuild only the header layout (replaces any Elementor edits to the header; the footer is left alone)', 'bali-sands-site' ); ?></label></p>
 			<?php endif; ?>
 			<?php if ( get_option( 'bss_footer_id' ) ) : ?>
 				<p><label><input type="checkbox" name="bss_rebuild_footer" value="1"> <?php esc_html_e( 'Rebuild only the footer layout (replaces any Elementor edits to the footer; the header is left alone)', 'bali-sands-site' ); ?></label></p>
@@ -245,7 +253,7 @@ function bss_setup_page() {
 /**
  * Run every step.
  *
- * @param array $opts rebuild_home, rebuild_categories, rebuild_about, rebuild_contact, rebuild_theme, rebuild_footer, rebuild_product, rebuild_menu, rebuild_mega.
+ * @param array $opts rebuild_home, rebuild_categories, rebuild_about, rebuild_imports, rebuild_contact, rebuild_header, rebuild_theme, rebuild_footer, rebuild_product, rebuild_menu, rebuild_mega.
  * @return string[] Log lines.
  */
 function bss_run_setup( $opts ) {
@@ -269,11 +277,12 @@ function bss_run_setup( $opts ) {
 	$log[] = bss_setup_product_listing( ! empty( $opts['rebuild_categories'] ) );
 	$log[] = bss_setup_category_layouts( ! empty( $opts['rebuild_categories'] ) );
 	$log[] = bss_setup_about( ! empty( $opts['rebuild_about'] ) );
+	$log[] = bss_setup_imports( ! empty( $opts['rebuild_imports'] ) );
 	$contact_form = bss_setup_contact_form();
 	$log[]        = $contact_form['log'];
 	$log[]        = bss_setup_contact( $contact_form['id'], ! empty( $opts['rebuild_contact'] ) );
 	$log[] = bss_setup_mega_menu( ! empty( $opts['rebuild_menu'] ) || ! empty( $opts['rebuild_mega'] ) );
-	$log[] = bss_setup_theme_template( 'header', 'Bali Sands header', ! empty( $opts['rebuild_theme'] ) );
+	$log[] = bss_setup_theme_template( 'header', 'Bali Sands header', ! empty( $opts['rebuild_theme'] ) || ! empty( $opts['rebuild_header'] ) );
 	$log[] = bss_setup_theme_template( 'footer', 'Bali Sands footer', ! empty( $opts['rebuild_theme'] ) || ! empty( $opts['rebuild_footer'] ) );
 	$log[] = bss_setup_theme_template( 'product_page', 'Product page', ! empty( $opts['rebuild_product'] ) );
 
@@ -1452,6 +1461,29 @@ function bss_setup_contact( $form_id, $rebuild ) {
 	bss_save_elementor( $id, bss_contact_elements( $form_id ), 'wp-page' );
 	update_option( 'bss_contact_built', 1, false );
 	return 'Contact page: built in Elementor (design 10a). Text in [square brackets] needs the real details.';
+}
+
+/**
+ * Give the Bali Imports page its Elementor layout (design 14a), once or when asked.
+ *
+ * @param bool $rebuild Overwrite the layout.
+ * @return string
+ */
+function bss_setup_imports( $rebuild ) {
+	if ( ! did_action( 'elementor/loaded' ) ) {
+		return '';
+	}
+	$id = bss_page_id( 'imports' );
+	if ( ! $id ) {
+		return 'Bali Imports page not found: run setup again.';
+	}
+	if ( get_option( 'bss_imports_built' ) && ! $rebuild ) {
+		return 'Bali Imports page: layout already built, left as it is.';
+	}
+	update_post_meta( $id, '_wp_page_template', 'elementor_header_footer' );
+	bss_save_elementor( $id, bss_imports_elements(), 'wp-page' );
+	update_option( 'bss_imports_built', 1, false );
+	return 'Bali Imports page: built in Elementor (design 14a). Set a photo on the "No two pieces are the same" panel, and replace the four [placeholder] Bali imports Products under Products.';
 }
 
 /**

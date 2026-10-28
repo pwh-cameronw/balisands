@@ -245,3 +245,117 @@
 	margin: 0 0 1em;
 	padding-left: 1.2em;
 }
+
+/*
+ * Bali Imports page (design 14a).
+ * ---------------------------------------------------------------------- */
+
+/* Category cards: body fills the card, "Shop now →" at the bottom, deeper shadow on hover. */
+.bs-imports-card {
+	display: flex !important;
+	flex-direction: column !important;
+}
+
+.bs-imports-card__body {
+	flex: 1 1 auto !important;
+}
+
+.bs-imports-card__more {
+	margin-top: auto !important;
+	padding-top: 16px;
+}
+
+.bs-imports-card:hover {
+	box-shadow: 0 14px 30px rgba(32, 28, 23, .14) !important;
+}
+
+.bs-imports-card__title .elementor-heading-title {
+	font-weight: 800;
+	font-size: 20px;
+}
+
+/* New arrivals ([bs_new_arrivals]): square photo with a tag, name, "Enquire →". */
+.bs-arrivals {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 16px;
+}
+
+@media (max-width: 1024px) {
+	.bs-arrivals {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+.bs-arrival,
+.bs-arrival:hover {
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	border: 1px solid var(--e-global-color-bs_line, #ECE6DA);
+	border-radius: 12px;
+	background: var(--e-global-color-bs_sand, #FAF6EE);
+	color: var(--e-global-color-bs_ink, #201C17);
+	text-decoration: none;
+	transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+.bs-arrival:hover {
+	border-color: var(--e-global-color-primary, #2F4034);
+	box-shadow: 0 10px 24px rgba(32, 28, 23, .10);
+}
+
+.bs-arrival__photo {
+	position: relative;
+	display: block;
+	aspect-ratio: 1 / 1;
+	background: var(--e-global-color-bs_photo_light, #E6DCCB);
+}
+
+.bs-arrival__photo img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	max-width: none;
+	object-fit: cover;
+	border-radius: 0;
+}
+
+.bs-arrival__tag {
+	position: absolute;
+	top: 12px;
+	left: 12px;
+	padding: 7px 10px;
+	border-radius: 100px;
+	background: var(--e-global-color-accent, #E2A63B);
+	color: var(--e-global-color-bs_ink, #201C17);
+	font-weight: 700;
+	font-size: 11.5px;
+	line-height: 1;
+}
+
+.bs-arrival__body {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	padding: 13px 15px 15px;
+}
+
+.bs-arrival__name {
+	font-family: var(--e-global-typography-bs_card-font-family, "Open Sans"), sans-serif;
+	font-weight: 700;
+	font-size: 15.5px;
+	line-height: 1.3;
+}
+
+.bs-arrival__cta {
+	font-weight: 700;
+	font-size: 13px;
+	line-height: 1;
+	color: var(--e-global-color-primary, #2F4034);
+}
+
+.bs-arrivals__none {
+	margin: 0;
+	color: var(--e-global-color-bs_muted, #6B6355);
+}

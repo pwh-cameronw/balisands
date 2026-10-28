@@ -24,6 +24,7 @@ add_shortcode( 'bs_product_count', 'bss_product_count_shortcode' );
 add_shortcode( 'bs_product_crumbs', 'bss_product_crumbs_shortcode' );
 add_shortcode( 'bs_product_sold_as', 'bss_product_sold_as_shortcode' );
 add_shortcode( 'bs_mega_products', 'bss_mega_products_shortcode' );
+add_shortcode( 'bs_new_arrivals', 'bss_new_arrivals_shortcode' );
 
 /**
  * Register the post type and taxonomies.
@@ -320,4 +321,56 @@ function bss_mega_products_shortcode( $atts ) {
 		);
 	}
 	return '<div class="bs-mega-products">' . $out . '</div>';
+}
+
+/**
+ * [bs_new_arrivals category="bali-imports" count="4"] — the newest Products in a
+ * product category (and its sub-categories), newest first, as photo cards
+ * with a "Just landed" (first two) or "New" tag, linking to the product page.
+ * Used by "New arrivals" on the Bali Imports page (design 14a).
+ *
+ * @param array $atts Shortcode attributes.
+ * @return string
+ */
+function bss_new_arrivals_shortcode( $atts ) {
+	$atts = shortcode_atts(
+		array(
+			'category' => 'bali-imports',
+			'count'    => 4,
+		),
+		$atts,
+		'bs_new_arrivals'
+	);
+	$products = get_posts(
+		array(
+			'post_type'      => 'bs_product',
+			'post_status'    => 'publish',
+			'posts_per_page' => max( 1, (int) $atts['count'] ),
+			'orderby'        => 'date',
+			'order'          => 'DESC',
+			'no_found_rows'  => true,
+			'tax_query'      => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+				array(
+					'taxonomy' => 'bs_product_cat',
+					'field'    => 'slug',
+					'terms'    => sanitize_title( $atts['category'] ),
+				),
+			),
+		)
+	);
+	if ( ! $products ) {
+		return '<p class="bs-arrivals__none">New pieces are on their way. Call the yard to hear what\'s just landed.</p>';
+	}
+
+	$out = '';
+	foreach ( $products as $i => $product ) {
+		$out .= sprintf(
+			'<a class="bs-arrival" href="%1$s"><span class="bs-arrival__photo">%2$s<span class="bs-arrival__tag">%3$s</span></span><span class="bs-arrival__body"><span class="bs-arrival__name">%4$s</span><span class="bs-arrival__cta">Enquire →</span></span></a>',
+			esc_url( get_permalink( $product ) ),
+			get_the_post_thumbnail( $product, 'medium_large', array( 'alt' => '', 'loading' => 'lazy' ) ),
+			$i < 2 ? 'Just landed' : 'New',
+			esc_html( get_the_title( $product ) )
+		);
+	}
+	return '<div class="bs-arrivals">' . $out . '</div>';
 }

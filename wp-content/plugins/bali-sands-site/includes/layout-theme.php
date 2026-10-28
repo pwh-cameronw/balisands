@@ -2,7 +2,7 @@
 /**
  * Site header and footer (design 6a) as Elementor Pro Theme Builder templates.
  *
- * Header: green top bar, logo + wordmark, JetMenu "Mega Menu" widget (falls
+ * Header: green top bar, the logo, JetMenu "Mega Menu" widget (falls
  * back to Elementor Pro's Nav Menu if JetMenu isn't active) and the "Get a
  * quote" button. Backgrounds run full width; the content is boxed to the site
  * width, so on wide screens it lines up with the page sections below. Footer: four columns and the small print. All separate
@@ -149,13 +149,13 @@ function bss_header_elements( $menu_id ) {
 				'header/logo',
 				bss_media_id( 'logo' ),
 				array(
-					'image_size'   => 'full',
-					'width'        => bss_size( 51 ),
-					'width_mobile' => bss_size( 40 ),
+					// The logo on its own (no wordmark), 30% up on the original 51px / 40px.
+					'image_size'     => 'full',
+					'width'          => bss_size( 66 ),
+					'width_mobile'   => bss_size( 52 ),
 					'_element_width' => 'auto',
 				)
 			),
-			bss_heading( 'header/wordmark', 'Bali Sands', 'div', 'bs_brand', 'bs_ink', array( '_element_width' => 'auto' ) ),
 		)
 	);
 

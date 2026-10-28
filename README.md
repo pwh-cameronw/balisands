@@ -46,6 +46,7 @@ To install from WordPress's uploader, zip each folder (`bali-sands-child.zip`, `
    - builds the **Soils** category page in Elementor (design 7a), with a JetEngine Listing Grid of the soils.
    - builds the **About** page in Elementor (design 8a).
    - builds the **Contact** page in Elementor (design 10a).
+   - builds the **Bali Imports** page in Elementor (design 14a).
    - creates the **header** and **footer** in Elementor Pro's Theme Builder and shows them on the whole site.
    - creates the **Product page** in the Theme Builder (a Single template) and shows it on every Product's **View details** page.
 
@@ -81,6 +82,16 @@ The About page is built in Elementor from design 8a, "About us — rebuilt in th
 - **Come and see us:** "The best way to choose is in person". It has address, hours and phone, **Get directions** (opens Google Maps in a new tab) and **Get a quote** buttons, and a Google Maps embed.
 
 Text in **[square brackets]** in "Our story" needs the client's real details. The photo panels are containers; set a photo under **Style → Background → Image**. The Bali imports card already shows the carved-panel photo from the old site.
+
+### Bali Imports page (design 14a)
+The **Bali Imports** page is built in Elementor from design 14a. Its sections, top to bottom:
+- **Hero:** the carved stone panel photo with a dark green fade. It has breadcrumbs, "Imported direct from Bali & Java", the title, a lead paragraph, and **Browse the range** and **Visit the yard** buttons.
+- **Shop by category:** "Six ways to bring Bali home". It has a card for each category page, with the page's featured image, a description and "Shop now →".
+- **New arrivals:** the four newest **Products** in the *Bali imports* product category (or its sub-categories), newest first. The first two are tagged "Just landed" and the rest "New", and each links to its product page. It's the `[bs_new_arrivals]` Shortcode widget, so it updates as products are added.
+- **Handmade:** "No two pieces are the same". The photo panel is a container; set a photo under **Style → Background → Image**.
+- **How to buy:** three steps, then **Send an enquiry** (which opens the Contact form with *Bali imports* picked) and the phone number.
+
+Setup adds four placeholder Bali imports products with the design's names in [square brackets], so New arrivals has something to show. Replace them with real pieces under **Products**: give each a photo, put it in the right Bali imports category, and delete the placeholders.
 
 ### Contact page (design 10a)
 The Contact page is built in Elementor from design 10a, "Contact us — call, visit or send an enquiry". Its sections, top to bottom:
@@ -127,6 +138,9 @@ Every Product's own page uses one layout: the Theme Builder template **Product p
 The name, photo, short description and "Best for" come from Elementor Pro's Post Title, Featured Image and ACF dynamic tags. The breadcrumbs and pills are the shortcodes `[bs_product_crumbs]` and `[bs_product_sold_as]`.
 
 New products get a starting write-up with four headings (What's in it, How to use it, How much you'll need, Good for). Text in **[square brackets]** needs the yard's real details. Products made by an earlier version keep their one-line write-up until it's edited.
+
+### Header logo
+The header shows the logo on its own, with no "BALI SANDS" wordmark. The logo is 66px wide (52px on phones). To change it, edit the header template's logo Image widget. **Updating an installed site:** run setup with **Rebuild only the header layout** ticked.
 
 ### Header width
 The header's backgrounds (green top bar, white bar) run the full width of the screen. Its content (logo, menu and **Get a quote**) is boxed to the site's content width, 1200px, so it sits centred and lines up with the page sections and footer. To change the width, go to **Site Settings → Layout → Content Width**. It applies to the whole site.
@@ -231,6 +245,7 @@ These are the parts I couldn't test without a live WordPress site and the licens
   - the yard in the early days (Our story)
   - the supplies bays or loader (Landscape supplies card)
   - makers at work, a container being packed or unloaded, and pieces set out in the yard (How our imports get here)
+- **Bali imports.** Replace the four [placeholder] products with real pieces, and add a photo to the "No two pieces are the same" panel (a maker carving stone or weaving).
 - **Soils range.** The eight soils, their descriptions and the bulk/bagged labels came from the design. Check them against what the yard sells, and add products for the other categories.
 - **Reviews.** The three review cards are placeholders. Paste in real Google reviews and set the "All Google reviews →" link.
 - **Delivery facts.** Check "0.5–8m³ per tipper", and the 8m³ tipper size the calculator uses: it's the `tipper="8"` attribute in the calculator's Shortcode widget.
