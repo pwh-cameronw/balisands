@@ -1,123 +1,214 @@
 <?php
 /**
  * The Landscape supplies mega menu content (a JetMenu "jet-menu" post, built
- * in Elementor): a column per category from bss_mega_menu() with its photo,
- * title and sub-category links, and a "See all landscape supplies" footer.
+ * in Elementor), in two panes:
  *
- * Images are the category pages' featured images; links go to the pages.
- * The panel's border and shadow are in assets/css/menu.css.
+ * - left, on sand: a tab per category from bss_mega_menu() (thumbnail and
+ *   name, linking to the category page);
+ * - right: the hovered category's title, description, "See all →" and a card
+ *   per sub-category (thumbnail and name).
+ *
+ * Hovering or focusing a tab shows its pane (assets/js/mega-menu.js); without
+ * the script the first pane shows. Images are the pages' featured images.
+ * Styles: assets/css/menu.css (.bs-mega…).
  *
  * @package BaliSandsSite
  */
 
 defined( 'ABSPATH' ) || exit;
 
+add_action( 'wp_enqueue_scripts', 'bss_mega_menu_script' );
+
 /**
- * One mega menu column.
+ * Tab switching for the mega menu.
+ */
+function bss_mega_menu_script() {
+	wp_enqueue_script( 'bss-mega-menu', BSS_URL . 'assets/js/mega-menu.js', array(), bss_asset_ver( 'assets/js/mega-menu.js' ), true );
+}
+
+/**
+ * A small square thumbnail (a page's featured image).
  *
- * @param string $seed   Id seed.
- * @param array  $column bss_mega_menu() row.
+ * @param string $seed Id seed.
+ * @param string $page Page key.
+ * @param int    $size Width and height (px).
+ * @param int    $radius Corner radius (px).
  * @return array
  */
-function bss_mega_column( $seed, $column ) {
-	list( $title, $page, $children ) = $column;
-	$pages = bss_pages();
-
-	$links = array();
-	foreach ( $children as $child ) {
-		$links[] = array( $pages[ $child ][0], bss_page_url( $child ) );
-	}
-
-	return bss_container(
+function bss_mega_thumb( $seed, $page, $size, $radius ) {
+	return bss_image(
 		$seed,
-		array( 'css_classes' => 'bs-mega__col' ),
+		bss_page_thumb_id( $page ),
 		array(
-			bss_image(
-				$seed . '/image',
-				bss_page_thumb_id( $page ),
-				array(
-					'image_size'          => 'medium',
-					'link_to'             => 'custom',
-					'link'                => bss_link( bss_page_url( $page ) ),
-					'width'               => bss_size( 100, '%' ),
-					'height'              => bss_size( 92 ),
-					'object-fit'          => 'cover',
-					'image_border_radius' => bss_box( 8 ),
-					'_css_classes'        => 'bs-mega__image',
-				)
-			),
-			bss_heading(
-				$seed . '/title',
-				esc_html( $title ),
-				'div',
-				'bs_card',
-				'bs_ink',
-				bss_merge(
-					array( 'link' => bss_link( bss_page_url( $page ) ) ),
-					bss_mt( 12 ),
-					bss_color( 'title_hover_color', 'primary' )
-				)
-			),
-			bss_icon_list(
-				$seed . '/links',
-				$links,
-				bss_merge(
-					array(
-						'space_between' => bss_size( 4 ),
-						'_margin'       => bss_box( 8, 0, 0, 0 ),
-					),
-					bss_color( 'text_color', 'text' ),
-					bss_color( 'text_color_hover', 'primary' ),
-					bss_font( 'bs_card_text', 'icon_typography' )
-				)
-			),
+			'image_size'            => 'thumbnail',
+			'width'                 => bss_size( $size ),
+			'height'                => bss_size( $size ),
+			'object-fit'            => 'cover',
+			'image_border_radius'   => bss_box( $radius ),
+			'_element_width'        => 'initial',
+			'_element_custom_width' => bss_size( $size ),
+			'_flex_size'            => 'none',
+			'_css_classes'          => 'bs-mega__thumb',
 		)
 	);
 }
 
 /**
- * The mega menu content, top to bottom.
+ * One tab in the left-hand list.
+ *
+ * @param int   $i      Index.
+ * @param array $column bss_mega_menu() row.
+ * @return array
+ */
+function bss_mega_tab( $i, $column ) {
+	$seed = 'mega/tab' . $i;
+	return bss_container(
+		$seed,
+		bss_merge(
+			array(
+				'html_tag'         => 'a',
+				'link'             => bss_link( bss_page_url( $column[1] ) ),
+				'flex_direction'   => 'row',
+				'flex_align_items' => 'center',
+				'flex_wrap'        => 'nowrap',
+				'flex_gap'         => bss_gap( 14 ),
+				// bs-mega__tab--N pairs with bs-mega__pane--N; the first starts active.
+				'css_classes'      => 'bs-mega__tab bs-mega__tab--' . $i . ( 0 === $i ? ' is-active' : '' ),
+			),
+			bss_pad( array( 12, 20 ) )
+		),
+		array(
+			bss_mega_thumb( $seed . '/thumb', $column[1], 30, 6 ),
+			bss_heading( $seed . '/label', esc_html( $column[0] ), 'div', 'bs_card', 'bs_ink', array( '_flex_size' => 'grow' ) ),
+			bss_heading( $seed . '/arrow', '→', 'div', 'bs_card_lg', 'bs_ink', array( '_element_width' => 'auto', '_css_classes' => 'bs-mega__arrow' ) ),
+		)
+	);
+}
+
+/**
+ * One category's pane: title, description, "See all →" and sub-category cards.
+ *
+ * @param int   $i      Index.
+ * @param array $column bss_mega_menu() row.
+ * @return array
+ */
+function bss_mega_pane( $i, $column ) {
+	$seed  = 'mega/pane' . $i;
+	$pages = bss_pages();
+
+	$cards = array();
+	foreach ( $column[2] as $j => $child ) {
+		$card_seed = $seed . '/card' . $j;
+		$cards[]   = bss_container(
+			$card_seed,
+			bss_merge(
+				array(
+					'html_tag'         => 'a',
+					'link'             => bss_link( bss_page_url( $child ) ),
+					'flex_direction'   => 'row',
+					'flex_align_items' => 'center',
+					'flex_wrap'        => 'nowrap',
+					'flex_gap'         => bss_gap( 14 ),
+					'css_classes'      => 'bs-mega__card',
+				),
+				bss_pad( array( 8 ) ),
+				bss_bg( 'bs_white' ),
+				bss_border( 'bs_line', 1, 12 )
+			),
+			array(
+				bss_mega_thumb( $card_seed . '/thumb', $child, 52, 8 ),
+				// Sentence case, as in the menu design: "Gravel & blue metal".
+				bss_heading( $card_seed . '/label', esc_html( ucfirst( strtolower( $pages[ $child ][0] ) ) ), 'div', 'bs_card', 'bs_ink', array( '_flex_size' => 'grow' ) ),
+			)
+		);
+	}
+
+	return bss_container(
+		$seed,
+		array( 'css_classes' => 'bs-mega__pane bs-mega__pane--' . $i . ( 0 === $i ? ' is-active' : '' ) ),
+		array(
+			bss_container(
+				$seed . '/head',
+				array(
+					'flex_direction'       => 'row',
+					'flex_justify_content' => 'space-between',
+					'flex_align_items'     => 'center',
+					'flex_gap'             => bss_gap( 16 ),
+				),
+				array(
+					bss_heading(
+						$seed . '/title',
+						esc_html( $column[0] ),
+						'div',
+						'bs_phone',
+						'bs_ink',
+						array(
+							'link'         => bss_link( bss_page_url( $column[1] ) ),
+							'_css_classes' => 'bs-mega__title',
+						)
+					),
+					bss_text_link( $seed . '/all', 'See all →', bss_page_url( $column[1] ), array( '_element_width' => 'auto', '_css_classes' => 'bs-mega__all' ) ),
+				)
+			),
+			bss_heading( $seed . '/desc', esc_html( $column[3] ), 'p', 'bs_card_text', 'bs_muted', bss_mt( 6 ) ),
+			$cards ? bss_grid( $seed . '/cards', array( 3, 2, 1 ), 12, $cards, array( 'margin' => bss_box( 18, 0, 0, 0 ), 'css_classes' => 'bs-mega__cards' ) ) : null,
+		)
+	);
+}
+
+/**
+ * The mega menu content.
  *
  * @return array
  */
 function bss_mega_supplies_elements() {
-	$columns = array();
+	$tabs  = array();
+	$panes = array();
 	foreach ( bss_mega_menu() as $i => $column ) {
-		$columns[] = bss_mega_column( 'mega/col' . $i, $column );
+		$tabs[]  = bss_mega_tab( $i, $column );
+		$panes[] = bss_mega_pane( $i, $column );
 	}
-
-	$foot = bss_container(
-		'mega/foot',
-		array(
-			'flex_direction'       => 'row',
-			'flex_justify_content' => 'space-between',
-			'flex_align_items'     => 'center',
-			'flex_wrap'            => 'wrap',
-			'flex_gap'             => bss_gap( 16, 8 ),
-			'margin'               => bss_box( 20, 0, 0, 0 ),
-			'padding'              => bss_box( 14, 0, 0, 0 ),
-			'border_border'        => 'solid',
-			'border_width'         => bss_box( 1, 0, 0, 0 ),
-			'border_color'         => bss_palette()['bs_line'][1],
-			'__globals__'          => array( 'border_color' => 'globals/colors?id=bs_line' ),
-		),
-		array(
-			bss_heading( 'mega/foot-text', 'Delivered across Perth, or loaded onto your trailer at the yard.', 'div', 'bs_card_text', 'bs_muted', array( '_element_width' => 'auto' ) ),
-			bss_text_link( 'mega/see-all', 'See all landscape supplies →', bss_page_url( 'supplies' ), array( '_element_width' => 'auto' ) ),
-		)
-	);
 
 	return array(
 		bss_container(
 			'mega/panel',
 			bss_merge(
-				array( 'css_classes' => 'bs-mega' ),
-				bss_pad( array( 22, 24, 18, 24 ), null, array( 16, 16, 14, 16 ) ),
+				array(
+					'flex_direction'   => 'row',
+					'flex_wrap'        => 'nowrap',
+					'flex_align_items' => 'stretch',
+					'css_classes'      => 'bs-mega bs-mega--tabs',
+				),
 				bss_bg( 'bs_white' )
 			),
 			array(
-				bss_grid( 'mega/grid', array( count( $columns ), 3, 2 ), 22, $columns ),
-				$foot,
+				bss_container(
+					'mega/nav',
+					bss_merge(
+						array(
+							'width'         => bss_size( 290 ),
+							'flex_size'     => 'none',
+							'padding'       => bss_box( 10, 0 ),
+							'border_border' => 'solid',
+							'border_width'  => bss_box( 0, 1, 0, 0 ),
+							'css_classes'   => 'bs-mega__nav',
+						),
+						bss_color( 'border_color', 'bs_line' ),
+						bss_bg( 'bs_sand' )
+					),
+					$tabs
+				),
+				bss_container(
+					'mega/panes',
+					bss_merge(
+						array(
+							'flex_size'   => 'grow',
+							'css_classes' => 'bs-mega__panes',
+						),
+						bss_pad( array( 24, 28, 28, 28 ) )
+					),
+					$panes
+				),
 			),
 			false
 		),

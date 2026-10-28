@@ -272,18 +272,20 @@ function bss_main_menu() {
 }
 
 /**
- * The Landscape supplies mega menu: one column per category,
- * [column title, page key, [sub-category page keys]].
+ * The Landscape supplies mega menu: one tab per category, with the
+ * sub-categories as cards in its pane.
+ * [tab title, page key, [sub-category page keys], one-line description].
  *
  * @return array<int,array>
  */
 function bss_mega_menu() {
 	return array(
-		array( 'Sands', 'sands', array( 'sands-brickies', 'sands-paving', 'sands-white', 'sands-fill' ) ),
-		array( 'Soils', 'soils', array( 'soils-garden', 'soils-topdress', 'soils-compost', 'soils-improvers' ) ),
-		array( 'Stones', 'stones', array( 'stones-gravel', 'stones-pebbles', 'stones-roadbase' ) ),
-		array( 'Mulch', 'mulch', array( 'mulch-pine', 'mulch-jarrah', 'mulch-black' ) ),
-		array( 'Paving', 'paving', array( 'paving-limestone', 'paving-pavers', 'paving-cement', 'edging' ) ),
+		array( 'Sands', 'sands', array( 'sands-brickies', 'sands-paving', 'sands-white', 'sands-fill' ), 'Bedding, mortar, sandpits and fill.' ),
+		array( 'Soils', 'soils', array( 'soils-garden', 'soils-topdress', 'soils-compost', 'soils-improvers' ), 'Garden beds, lawns and veggie patches.' ),
+		array( 'Stones', 'stones', array( 'stones-gravel', 'stones-pebbles', 'stones-roadbase' ), 'Drainage, paths, driveways and decoration.' ),
+		array( 'Mulch', 'mulch', array( 'mulch-pine', 'mulch-jarrah', 'mulch-black' ), 'Keeps the moisture in and the weeds down.' ),
+		array( 'Limestone, pavers & cement', 'paving', array( 'paving-limestone', 'paving-pavers', 'paving-cement' ), 'Retaining walls, paving and concrete.' ),
+		array( 'Edging, tools & retic', 'edging', array(), 'Garden edging, hand tools and reticulation fittings.' ),
 	);
 }
 

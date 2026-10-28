@@ -156,15 +156,20 @@ The category cards on the homepage, the menu items and the footer lists all link
 3. Add it to **Appearance → Menus → Main menu** under the right dropdown.
 
 ### Landscape supplies mega menu
-In the Main menu, **Landscape supplies** has five categories under it: Sands, Soils, Stones, Mulch and Paving, each with its sub-categories under it. JetMenu shows them as a **mega menu**: a wide panel with a column per category. Each column has the category's photo (its page's featured image), its title, and links to its sub-categories. At the foot is a "See all landscape supplies →" link.
+In the Main menu, **Landscape supplies** opens a **mega menu** (JetMenu) in two panes:
+- **Left, on sand:** a tab for each category: Sands, Soils, Stones, Mulch, Limestone, pavers & cement, and Edging, tools & retic. Each tab has its page's photo and name.
+- **Right:** the category under the pointer. It shows the category's title, a one-line description, **See all →**, and a card for each sub-category with its photo.
 
-- **Editing the panel:** go to **Appearance → Menus**, hover the *Landscape supplies* item, click **JetMenu**, then **Edit Mega Menu Item Content**. It opens in Elementor. Each photo, title and link list is its own widget.
-- **Adding a category or sub-category:** add it to the Main menu under the right item, so the mobile menu has it. Then add it to the mega menu content in Elementor.
-- **Panel size and position:** it opens just under the white header bar and spans the header's full content width, from the logo to **Get a quote**. That's the site's content width (1200px, **Site Settings → Layout**). The CSS is in the plugin's `assets/css/menu.css`.
-- **On phones and tablets:** the same mega content opens below *Landscape supplies* in the mobile menu, without the photos: the category titles and links sit in two columns.
+Hovering or tabbing to a category switches the right pane (the plugin's `assets/js/mega-menu.js`). Clicking a tab, title or card opens that page. The photos are the pages' featured images.
+
+- **Editing the panel:** go to **Appearance → Menus**, hover the *Landscape supplies* item, click **JetMenu**, then **Edit Mega Menu Item Content**. It opens in Elementor. Every tab, title, description and card is its own widget.
+  - A tab and its pane are paired by their CSS classes (`bs-mega__tab--2` goes with `bs-mega__pane--2`). Keep the numbers matching if you add or reorder categories.
+  - The descriptions are set in `bss_mega_menu()` in the plugin's `includes/data.php`.
+- **Panel size and position:** it opens just under the white header bar and spans the header's full content width, from the logo to **Get a quote**. The styles are in the plugin's `assets/css/menu.css`.
+- **On phones and tablets:** the tab list is hidden. Each category's title (a link) shows with its sub-categories as two columns of links below it.
 - **Without JetMenu:** Landscape supplies shows as an ordinary nested menu (category › sub-categories) from the Main menu's items.
 
-Running setup with **Rebuild the main menu** ticked rebuilds the menu items and the mega menu content.
+To update the panel on an installed site, run setup with **Rebuild only the Landscape supplies mega menu content** ticked. That leaves the menu items alone. **Rebuild the main menu** rebuilds both the items and the panel.
 
 ### Menu images
 In the main menu, each dropdown row shows **the linked page's featured image**, its title and its menu **Description** (turn Description on under *Screen Options* in Appearance → Menus). To change an image, change the page's featured image.
