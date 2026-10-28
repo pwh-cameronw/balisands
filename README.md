@@ -142,7 +142,8 @@ In the Main menu, **Landscape supplies** has five categories under it: Sands, So
 - **Editing the panel:** go to **Appearance → Menus**, hover the *Landscape supplies* item, click **JetMenu**, then **Edit Mega Menu Item Content**. It opens in Elementor. Each photo, title and link list is its own widget.
 - **Adding a category or sub-category:** add it to the Main menu under the right item, so the mobile menu has it. Then add it to the mega menu content in Elementor.
 - **Panel size and position:** it opens just under the white header bar and spans the header's full content width, from the logo to **Get a quote**. That's the site's content width (1200px, **Site Settings → Layout**). The CSS is in the plugin's `assets/css/menu.css`.
-- **Mobile, and without JetMenu:** Landscape supplies shows as an ordinary nested menu (category › sub-categories) from the Main menu's items.
+- **On phones and tablets:** the same mega content opens below *Landscape supplies* in the mobile menu, without the photos: the category titles and links sit in two columns.
+- **Without JetMenu:** Landscape supplies shows as an ordinary nested menu (category › sub-categories) from the Main menu's items.
 
 Running setup with **Rebuild the main menu** ticked rebuilds the menu items and the mega menu content.
 

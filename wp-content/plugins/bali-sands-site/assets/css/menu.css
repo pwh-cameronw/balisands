@@ -387,7 +387,8 @@
 	}
 
 	.bs-main-menu .jet-mega-menu-list {
-		flex-direction: column;
+		flex-direction: column !important;
+		flex-wrap: nowrap !important;
 		align-items: stretch;
 		width: 100%;
 		max-height: calc(100vh - 120px);
@@ -475,5 +476,39 @@
 	.bs-main-menu .bs-menu-thumb__label,
 	.bs-main-menu .bs-menu-thumb__desc {
 		white-space: normal;
+	}
+
+	/* A row's dropdown or mega content opens below it, not beside it; rows
+	   never squash to fit the screen (the list scrolls instead). */
+	.bs-main-menu .jet-mega-menu-item--top-level {
+		display: block !important;
+		flex-shrink: 0 !important;
+	}
+
+	/* Landscape supplies on phones: titles and links in two columns, no photos. */
+	.bs-main-menu .bs-mega {
+		padding: 2px 0 6px 8px !important;
+		--padding-top: 2px;
+		--padding-right: 0px;
+		--padding-bottom: 6px;
+		--padding-left: 8px;
+	}
+
+	.bs-main-menu .bs-mega__image {
+		display: none !important;
+	}
+
+	/* Each grid row only as tall as its own content. */
+	.bs-main-menu .bs-mega .e-grid,
+	.bs-main-menu .bs-mega .e-con.e-grid {
+		grid-template-rows: none !important;
+		grid-auto-rows: auto !important;
+		--e-con-grid-template-rows: none;
+		align-content: start;
+	}
+
+	.bs-main-menu .bs-mega__col > .elementor-widget-heading {
+		margin-top: 0 !important;
+		--margin-top: 0px;
 	}
 }
