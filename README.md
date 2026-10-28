@@ -44,6 +44,7 @@ To install from WordPress's uploader, zip each folder (`bali-sands-child.zip`, `
    - creates the JetEngine **Product card** listing.
    - builds the **Soils** category page in Elementor (design 7a), with a JetEngine Listing Grid of the soils.
    - builds the **About** page in Elementor (design 8a).
+   - builds the **Contact** page in Elementor (design 10a): a green intro with call, visit and opening-hours cards, the **Get a quote** form beside the yard's details, and a map.
    - creates the **header** and **footer** in Elementor Pro's Theme Builder and shows them on the whole site.
 
    It's safe to run again: it only adds what's missing. The homepage, header and footer layouts are only replaced if you tick their **Rebuild** box.

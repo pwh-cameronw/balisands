@@ -135,6 +135,7 @@ function bss_setup_page() {
 				'rebuild_home'       => ! empty( $_POST['bss_rebuild_home'] ),
 				'rebuild_categories' => ! empty( $_POST['bss_rebuild_categories'] ),
 				'rebuild_about'      => ! empty( $_POST['bss_rebuild_about'] ),
+				'rebuild_contact'    => ! empty( $_POST['bss_rebuild_contact'] ),
 				'rebuild_theme'      => ! empty( $_POST['bss_rebuild_theme'] ),
 			)
 		);
@@ -201,6 +202,9 @@ function bss_setup_page() {
 			<?php if ( get_option( 'bss_about_built' ) ) : ?>
 				<p><label><input type="checkbox" name="bss_rebuild_about" value="1"> <?php esc_html_e( 'Rebuild the About page layout (replaces any Elementor edits to it)', 'bali-sands-site' ); ?></label></p>
 			<?php endif; ?>
+			<?php if ( get_option( 'bss_contact_built' ) ) : ?>
+				<p><label><input type="checkbox" name="bss_rebuild_contact" value="1"> <?php esc_html_e( 'Rebuild the Contact page layout (replaces any Elementor edits to it)', 'bali-sands-site' ); ?></label></p>
+			<?php endif; ?>
 			<?php if ( get_option( 'bss_header_id' ) || get_option( 'bss_footer_id' ) ) : ?>
 				<p><label><input type="checkbox" name="bss_rebuild_theme" value="1"> <?php esc_html_e( 'Rebuild the header and footer layouts (replaces any Elementor edits to them)', 'bali-sands-site' ); ?></label></p>
 			<?php endif; ?>
@@ -247,6 +251,7 @@ function bss_run_setup( $opts ) {
 	$log[] = bss_setup_product_listing( ! empty( $opts['rebuild_categories'] ) );
 	$log[] = bss_setup_category_layouts( ! empty( $opts['rebuild_categories'] ) );
 	$log[] = bss_setup_about( ! empty( $opts['rebuild_about'] ) );
+	$log[] = bss_setup_contact( $form['id'], ! empty( $opts['rebuild_contact'] ) );
 	$log[] = bss_setup_theme_template( 'header', 'Bali Sands header', ! empty( $opts['rebuild_theme'] ) );
 	$log[] = bss_setup_theme_template( 'footer', 'Bali Sands footer', ! empty( $opts['rebuild_theme'] ) );
 
@@ -1099,6 +1104,32 @@ function bss_setup_about( $rebuild ) {
 	bss_save_elementor( $id, bss_about_elements(), 'wp-page' );
 	update_option( 'bss_about_built', 1, false );
 	return 'About page: built in Elementor. Text in [square brackets] needs the real details.';
+}
+
+/**
+ * Give the Contact page its Elementor layout (once, or again when asked).
+ *
+ * @param int  $form_id Quote form id.
+ * @param bool $rebuild Overwrite the layout.
+ * @return string
+ */
+function bss_setup_contact( $form_id, $rebuild ) {
+	if ( ! did_action( 'elementor/loaded' ) ) {
+		return '';
+	}
+	$id = bss_page_id( 'contact' );
+	if ( ! $id ) {
+		return 'Contact page not found: run setup again.';
+	}
+	if ( get_option( 'bss_contact_built' ) && ! $rebuild ) {
+		return 'Contact page: layout already built, left as it is.';
+	}
+	update_post_meta( $id, '_wp_page_template', 'elementor_header_footer' );
+	bss_save_elementor( $id, bss_contact_elements( $form_id ), 'wp-page' );
+	update_option( 'bss_contact_built', 1, false );
+	return $form_id
+		? 'Contact page: built in Elementor, with the quote form.'
+		: 'Contact page: built in Elementor. Activate Gravity Forms, run setup again and tick "Rebuild the Contact page layout" to add the form.';
 }
 
 /**

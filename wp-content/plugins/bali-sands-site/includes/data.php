@@ -65,6 +65,23 @@ function bss_about() {
 }
 
 /**
+ * Contact page content (design 10a, "Contact us").
+ *
+ * @return array<string,string>
+ */
+function bss_contact() {
+	return array(
+		'eyebrow'    => 'Contact us',
+		'title'      => 'Talk to the yard',
+		'lead'       => 'Ring us, drop in, or send the details of the job below. Tell us what you\'re building and we\'ll work out what you need and how much of it.',
+		'form_title' => 'Tell us about the job',
+		'form_text'  => 'Add your address if you want it delivered. It changes the price and which truck we send. Not sure what you need? Describe the job and we\'ll work it out.',
+		'delivery'   => 'We tip loads from half a cube upwards across the Perth metro. Add your address to the form and we\'ll include delivery in the price.',
+		'map_title'  => 'On Nicholson Road in Forrestdale',
+	);
+}
+
+/**
  * Elementor global colours: id => [title, hex]. The first four are Elementor's system colours.
  *
  * @return array<string,array{0:string,1:string}>
