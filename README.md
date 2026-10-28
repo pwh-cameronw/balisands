@@ -147,9 +147,12 @@ The header's backgrounds (green top bar, white bar) run the full width of the sc
 
 **Updating from 1.3.0 or earlier:** run setup with **Rebuild the header and footer layouts** ticked. Or, in the header template, select the top bar and the white bar containers and set **Layout → Content Width** to *Boxed*.
 
+### Footer logo
+The footer's first column starts with the **white Bali Sands logo**, above the line "Landscape supplies and Bali imports from our Forrestdale yard…". It replaces the "BALI SANDS" wordmark and links to the homepage. It's 150px wide, or 110px on phones. The file ships in the plugin as `assets/img/logo-white.webp`; to use a different one, pick an image in the footer template's logo Image widget. The header keeps the colour logo.
+
 ### Footer on phones
 Below 768px wide the footer has its own layout, built from phone-only widgets in the footer template (Elementor **Advanced → Responsive → Hide on desktop / tablet**):
-- **Brand:** the logo beside the wordmark.
+- **Brand:** the white logo (the same one as on desktop).
 - **Buttons:** **Call the yard** (amber) and **Directions**, which opens Google Maps.
 - **Visit:** the address and opening hours.
 - **Link lists:** **Landscape supplies**, **Bali imports** and **Company** (Delivery, About us, Contact; the menu *Footer: Company*) as accordions. Tap a heading to open its links; the amber + turns to −.

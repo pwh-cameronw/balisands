@@ -7,7 +7,7 @@
  * quote" button. Backgrounds run full width; the content is boxed to the site
  * width, so on wide screens it lines up with the page sections below. Footer: four columns and the small print. All separate
  * widgets; backgrounds are Global Colors. On phones the footer has its own
- * layout: logo, call and directions buttons, address and hours, then the link
+ * layout: white logo, call and directions buttons, address and hours, then the link
  * columns as accordions (assets/css/footer.css, assets/js/footer.js).
  *
  * @package BaliSandsSite
@@ -292,31 +292,26 @@ function bss_footer_elements() {
 				'footer/col-about',
 				31,
 				array(
-					bss_container(
-						'footer/brand',
+					// The white logo (no wordmark), linking home. It ships in the plugin: assets/img/logo-white.webp.
+					bss_widget(
+						'footer/logo-white',
+						'image',
 						array(
-							'flex_direction'   => 'row',
-							'flex_align_items' => 'center',
-							'flex_gap'         => bss_gap( 10 ),
-						),
-						array(
-							// The logo shows beside the wordmark on phones only.
-							bss_image(
-								'footer/logo',
-								bss_media_id( 'logo' ),
-								bss_merge(
-									array(
-										'image_size'     => 'full',
-										'width'          => bss_size( 34 ),
-										'_element_width' => 'auto',
-									),
-									$phone_only
-								)
+							'image'          => array(
+								'url' => BSS_URL . 'assets/img/logo-white.webp',
+								'id'  => '',
+								'alt' => 'Bali Sands',
 							),
-							bss_heading( 'footer/wordmark', 'Bali Sands', 'div', 'bs_brand', 'bs_white', array( 'link' => bss_link( home_url( '/' ) ), '_element_width' => 'auto' ) ),
+							'image_size'     => 'full',
+							'link_to'        => 'custom',
+							'link'           => bss_link( home_url( '/' ) ),
+							'width'          => bss_size( 150 ),
+							'width_mobile'   => bss_size( 110 ),
+							'align'          => 'left',
+							'_element_width' => 'auto',
 						)
 					),
-					bss_text( 'footer/blurb', '<p>Landscape supplies and Bali imports from our Forrestdale yard. Open seven days, delivery across Perth.</p>', 'bs_footer', 'bs_footer_text', bss_merge( bss_mt( 12 ), bss_max_width( 270 ), array( 'hide_mobile' => 'hidden-mobile' ) ) ),
+					bss_text( 'footer/blurb', '<p>Landscape supplies and Bali imports from our Forrestdale yard. Open seven days, delivery across Perth.</p>', 'bs_footer', 'bs_footer_text', bss_merge( bss_mt( 16 ), bss_max_width( 270 ), array( 'hide_mobile' => 'hidden-mobile' ) ) ),
 					// Phones: call and directions buttons, then the address and hours (the "Find the yard" column is hidden there).
 					bss_container(
 						'footer/mobile-contact',
